@@ -1,13 +1,23 @@
 import type { ChordName } from '../Theory/chords';
 
-export interface SetSelectedChordAction {
-  type: 'setSelectedChord';
+export interface AddChordAction {
+  type: 'addChord';
   chord: ChordName;
 }
 
-export const setSelectedChord = (chord: ChordName): SetSelectedChordAction => ({
-  type: 'setSelectedChord',
+export const addChord = (chord: ChordName): AddChordAction => ({
+  type: 'addChord',
   chord,
 });
 
-export type Action = SetSelectedChordAction;
+export interface RemoveChordAction {
+  type: 'removeChord';
+  chord: ChordName;
+}
+
+export const removeChord = (chord: ChordName): RemoveChordAction => ({
+  type: 'removeChord',
+  chord,
+});
+
+export type Action = AddChordAction | RemoveChordAction;

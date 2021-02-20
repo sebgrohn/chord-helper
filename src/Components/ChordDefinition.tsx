@@ -14,6 +14,8 @@ const ChordDefinition = ({ chord }: Props) => {
   const chordNotes = getChordNotes(chord);
   return (
     <div>
+      Name: {chord}
+      <br />
       Notes:{' '}
       {chordNotes.map((n) => (
         <Fragment key={n}>

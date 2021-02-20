@@ -3,20 +3,32 @@ import type { ChordName } from '../Theory/chords';
 import { Action } from './actions';
 
 export interface State {
-  selectedChord?: ChordName;
+  selectedChords: ChordName[];
 }
 
 export const initialState: State = {
-  selectedChord: 'D',
+  selectedChords: ['D'],
 };
 
 const reducer: Reducer<State, Action> = (state, action) => {
   switch (action.type) {
-    case 'setSelectedChord':
-      return {
-        ...state,
-        selectedChord: action.chord,
-      };
+    case 'addChord':
+      return !state.selectedChords.find((c) => c === action.chord)
+        ? {
+            ...state,
+            selectedChords: [...state.selectedChords, action.chord],
+          }
+        : state;
+
+    case 'removeChord':
+      return state.selectedChords.find((c) => c === action.chord)
+        ? {
+            ...state,
+            selectedChords: [
+              ...state.selectedChords.filter((c) => c !== action.chord),
+            ],
+          }
+        : state;
 
     default:
       throw new Error();

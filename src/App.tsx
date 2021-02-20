@@ -1,5 +1,5 @@
-import React, { useCallback, useReducer } from 'react';
-import { ThemeProvider } from 'styled-components';
+import React, { Fragment, useCallback, useReducer } from 'react';
+import styled, { ThemeProvider } from 'styled-components';
 import './App.css';
 import ChordDefinition from './Components/ChordDefinition';
 import ChordSelector from './Components/ChordSelector';
@@ -9,13 +9,25 @@ import reducer, { initialState } from './Store/reducer';
 import * as selectors from './Store/selectors';
 import { theme } from './theme';
 
+const ChordCollection = styled.div`
+  display: flex;
+  column-gap: 10px;
+`;
+
+const ChordContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+`;
+
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const selectedChord = selectors.getSelectedChord(state);
+  const selectedChords = selectors.getSelectedChords(state);
+  const availableChords = selectors.getAvailableChords(state);
 
-  const handleSelectedChordChange = useCallback(
-    (newSelectedChord) => dispatch(actions.setSelectedChord(newSelectedChord)),
+  const handleChordSelected = useCallback(
+    (newChord) => dispatch(actions.addChord(newChord)),
     [dispatch],
   );
 
@@ -24,11 +36,17 @@ function App() {
       <div className="App">
         <header className="App-header">
           <ChordSelector
-            selectedChord={selectedChord}
-            onSelectedChordChange={handleSelectedChordChange}
+            chords={availableChords}
+            onChordSelected={handleChordSelected}
           />
-          <ChordDefinition chord={selectedChord} />
-          <StringChord chord={selectedChord} />
+          <ChordCollection>
+            {selectedChords.map((c) => (
+              <ChordContainer key={c}>
+                <ChordDefinition chord={c} />
+                <StringChord chord={c} />
+              </ChordContainer>
+            ))}
+          </ChordCollection>
         </header>
       </div>
     </ThemeProvider>
