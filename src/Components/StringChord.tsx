@@ -14,7 +14,12 @@ const StyledTable = styled.table`
   td {
     width: 30px;
     height: 20px;
-    border-bottom: 1px solid gray;
+
+    border-bottom: 1px solid #808080;
+    border-right: 1px solid #c0c0c0;
+    &:first-child {
+      border-right-width: 2px;
+    }
   }
 
   tr:last-child > td,
@@ -23,17 +28,8 @@ const StyledTable = styled.table`
   }
 `;
 
-const StyledTd = styled.td<{ isMuted?: boolean; isPushed?: boolean }>`
-  color: ${({ isMuted, isPushed }) =>
-    isMuted || !isPushed ? 'gray' : 'inherit'};
-
-  border-right-style: solid;
-  border-right-width: 1px;
-  &:first-child {
-    border-right-width: 2px;
-  }
-
-  border-right-color: ${({ isMuted }) => (isMuted ? 'gray' : 'white')};
+const StyledTd = styled.td<{ isPushed?: boolean }>`
+  color: ${({ isPushed }) => (isPushed ? 'white' : '#808080')};
 `;
 
 const StringChord = ({ instrument = 'guitar', chord }: Props) => {
@@ -66,13 +62,13 @@ const StringChord = ({ instrument = 'guitar', chord }: Props) => {
                   )}
                 </StyledTd>
               ) : (
-                <StyledTd key={i} isMuted>
+                <StyledTd key={i}>
                   {i === 0 ? (
                     <FormattedNote
                       note={transposeNote(reversedTuning[ii], i)}
                     />
                   ) : (
-                    'x'
+                    '🞩'
                   )}
                 </StyledTd>
               ),
