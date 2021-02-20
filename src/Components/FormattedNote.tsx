@@ -1,11 +1,25 @@
 import { Note, NoteName } from '../Theory/notes';
 
+const notePattern = /^\s*([A-G])(#)?(\d)?\s*$/;
+
+const getNoteParts = (note: Note | NoteName) => {
+  const [_, noteName, hash, octave] = notePattern.exec(note) ?? [];
+  return [noteName, hash, octave];
+};
+
 export interface Props {
   note: Note | NoteName;
 }
 
 const FormattedNote = ({ note }: Props) => {
-  return <span>{note}</span>;
+  const [noteName, hash, octave] = getNoteParts(note);
+  return (
+    <span>
+      {noteName}
+      <sup>{hash && '♯'}</sup>
+      {octave && <sub>{octave}</sub>}
+    </span>
+  );
 };
 
 export default FormattedNote;
