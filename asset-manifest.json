@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/chord-helper/static/css/main.7ed9bf9e.chunk.css",
+    "main.js": "/chord-helper/static/js/main.b9ebde57.chunk.js",
+    "main.js.map": "/chord-helper/static/js/main.b9ebde57.chunk.js.map",
+    "runtime-main.js": "/chord-helper/static/js/runtime-main.23a4c8f6.js",
+    "runtime-main.js.map": "/chord-helper/static/js/runtime-main.23a4c8f6.js.map",
+    "static/js/2.311217f9.chunk.js": "/chord-helper/static/js/2.311217f9.chunk.js",
+    "static/js/2.311217f9.chunk.js.map": "/chord-helper/static/js/2.311217f9.chunk.js.map",
+    "static/js/3.8aa70106.chunk.js": "/chord-helper/static/js/3.8aa70106.chunk.js",
+    "static/js/3.8aa70106.chunk.js.map": "/chord-helper/static/js/3.8aa70106.chunk.js.map",
+    "index.html": "/chord-helper/index.html",
+    "static/css/main.7ed9bf9e.chunk.css.map": "/chord-helper/static/css/main.7ed9bf9e.chunk.css.map",
+    "static/js/2.311217f9.chunk.js.LICENSE.txt": "/chord-helper/static/js/2.311217f9.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.23a4c8f6.js",
+    "static/js/2.311217f9.chunk.js",
+    "static/css/main.7ed9bf9e.chunk.css",
+    "static/js/main.b9ebde57.chunk.js"
+  ]
+}
