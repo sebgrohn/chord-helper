@@ -14,6 +14,9 @@ export interface Props {
 const StyledTable = styled.table`
   box-sizing: border-box;
 
+  cursor: pointer;
+  user-select: none;
+
   width: 100%;
   height: 100%;
 
@@ -42,20 +45,57 @@ const StyledTable = styled.table`
   }
 `;
 
-const StyledTd = styled.td<{ isMuted: boolean; isPushed: boolean }>`
-  ${({ isMuted, isPushed, theme }) =>
-    isMuted
+const PushedNoteCircle = styled.div`
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
+  text-align: center;
+`;
+
+const StyledTd = styled.td<{
+  isStringMuted: boolean;
+  isNoteVisible: boolean;
+  isNoteActive: boolean;
+  isNotePushed: boolean;
+}>`
+  ${({ isStringMuted, isNoteActive, theme }) =>
+    isStringMuted
       ? css`
           color: ${theme.global.colors['text-xweak'].dark};
         `
       : css`
           background: ${theme.global.colors['background-contrast'].dark};
-          color: ${isPushed
+          color: ${isNoteActive
             ? theme.global.colors['text'].dark
             : theme.global.colors['text-weak'].dark};
         `}
 
-  font-weight: ${({ isPushed }) => (isPushed ? 'bold' : 'normal')};
+  font-weight: ${({ isNoteActive }) => (isNoteActive ? 'bold' : 'normal')};
+
+  ${PushedNoteCircle} {
+    display: ${({ isNoteVisible }) =>
+      isNoteVisible ? 'inline-block' : 'none'};
+
+    background: ${({ isNotePushed, theme }) =>
+      isNotePushed ? theme.global.colors['border'].dark : 'transparent'};
+  }
+
+  &:hover {
+    ${PushedNoteCircle} {
+      display: inline-block;
+
+      background: ${({ isNotePushed, theme }) =>
+        isNotePushed
+          ? theme.global.colors['accent-1']
+          : theme.global.colors['background-contrast'].dark};
+
+      font-weight: bold;
+    }
+
+    & > :nth-child(2) {
+      display: none;
+    }
+  }
 `;
 
 const StringChord = ({ instrument = 'guitar', chord }: Props) => {
@@ -75,8 +115,10 @@ const StringChord = ({ instrument = 'guitar', chord }: Props) => {
 
   const reversedStringNotes = reversedPositions.map((p, j) =>
     new Array(maxPosition).fill(undefined).map((_, i) => ({
-      isPushed: i === p,
-      isMuted: p === null,
+      isStringMuted: p === null,
+      isNoteVisible: i === p || i === 0,
+      isNoteActive: i === p,
+      isNotePushed: i === p && i !== 0,
       note: transposeNote(reversedTuning[j], i),
     })),
   );
@@ -86,15 +128,31 @@ const StringChord = ({ instrument = 'guitar', chord }: Props) => {
       <tbody>
         {reversedStringNotes.map((s, j) => (
           <tr key={j}>
-            {s.map(({ isPushed, isMuted, note }, i) => (
-              <StyledTd key={note} isMuted={isMuted} isPushed={isPushed}>
-                {i === 0 || isPushed ? (
-                  <FormattedNote note={note} />
-                ) : (
-                  <Text>{isMuted && '🞩'}</Text>
-                )}
-              </StyledTd>
-            ))}
+            {s.map(
+              (
+                {
+                  isStringMuted,
+                  isNoteVisible,
+                  isNoteActive,
+                  isNotePushed,
+                  note,
+                },
+                i,
+              ) => (
+                <StyledTd
+                  key={note}
+                  isStringMuted={isStringMuted}
+                  isNoteVisible={isNoteVisible}
+                  isNoteActive={isNoteActive}
+                  isNotePushed={isNotePushed}
+                >
+                  <PushedNoteCircle>
+                    <FormattedNote note={note} />
+                  </PushedNoteCircle>
+                  {isStringMuted && !isNoteVisible && <Text>🞩</Text>}
+                </StyledTd>
+              ),
+            )}
           </tr>
         ))}
       </tbody>
