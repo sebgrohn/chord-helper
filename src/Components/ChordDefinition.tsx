@@ -1,5 +1,6 @@
 import { Box, Card, Heading, Text } from 'grommet';
 import { ChordName, getChordNotes } from '../Theory/chords';
+import FormattedChord from './FormattedChord';
 import FormattedNote from './FormattedNote';
 
 export interface Props {
@@ -20,7 +21,7 @@ const ChordDefinition = ({ chord }: Props) => {
         border={{ side: 'right', color: 'background-contrast' }}
       >
         <Heading level={2} size="small" color="accent-1" margin="none">
-          {chord}
+          <FormattedChord chord={chord} />
         </Heading>
       </Card>
       <Box
