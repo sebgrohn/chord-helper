@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Box, Card, Heading, Text } from 'grommet';
 import { ChordName, getChordNotes } from '../Theory/chords';
 import FormattedNote from './FormattedNote';
 
@@ -13,16 +13,28 @@ const ChordDefinition = ({ chord }: Props) => {
 
   const chordNotes = getChordNotes(chord);
   return (
-    <div>
-      Name: {chord}
-      <br />
-      Notes:{' '}
-      {chordNotes.map((n) => (
-        <Fragment key={n}>
-          <FormattedNote note={n} />{' '}
-        </Fragment>
-      ))}
-    </div>
+    <>
+      <Card
+        pad={{ horizontal: 'medium', vertical: 'small' }}
+        background="background-front"
+        border={{ side: 'right', color: 'background-contrast' }}
+      >
+        <Heading level={2} size="small" color="accent-1" margin="none">
+          {chord}
+        </Heading>
+      </Card>
+      <Box
+        pad={{ horizontal: 'medium', vertical: 'small' }}
+        direction="row"
+        gap="small"
+      >
+        {chordNotes.map((n) => (
+          <Text key={n}>
+            <FormattedNote note={n} />
+          </Text>
+        ))}
+      </Box>
+    </>
   );
 };
 

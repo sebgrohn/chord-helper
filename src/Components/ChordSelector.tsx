@@ -1,5 +1,6 @@
-import { KeyboardEvent, useCallback, useState } from 'react';
-import { ChordName, isValidChordName } from '../Theory/chords';
+import { Select } from 'grommet';
+import { useCallback, useMemo, useState } from 'react';
+import { ChordName } from '../Theory/chords';
 
 export interface Props {
   chords: ChordName[];
@@ -8,25 +9,39 @@ export interface Props {
 
 const ChordSelector = ({ chords, onChordSelected }: Props) => {
   const [selectedChord, setSelectedChord] = useState();
+  const [searchString, setSearchString] = useState('');
+
+  const matchingChords = useMemo(
+    () =>
+      chords
+        .map((c) => ({ label: c, value: c }))
+        .filter((x) =>
+          x.label.toLowerCase().includes(searchString.toLowerCase()),
+        ),
+    [chords, searchString],
+  );
+
+  const handleChange = useCallback(
+    ({ value }) => {
+      setSelectedChord(undefined);
+      setSearchString('');
+      onChordSelected(value as ChordName);
+    },
+    [onChordSelected],
+  );
 
   return (
-    <div>
-      Add chord:{' '}
-      <select
-        value={selectedChord}
-        onChange={(e) => {
-          setSelectedChord(undefined);
-          onChordSelected(e.target.value as ChordName);
-        }}
-      >
-        <option value={undefined}>Add chord...</option>
-        {chords.map((c) => (
-          <option key={c} value={c}>
-            {c}
-          </option>
-        ))}
-      </select>
-    </div>
+    <Select
+      value={selectedChord}
+      options={matchingChords}
+      valueKey={{ key: 'value', reduce: true }}
+      labelKey={(c) => c.label}
+      closeOnChange={false}
+      placeholder="Add chords"
+      searchPlaceholder="Search by name"
+      onSearch={setSearchString}
+      onChange={handleChange}
+    />
   );
 };
 

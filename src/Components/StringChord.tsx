@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import { Text } from 'grommet';
+import styled, { css } from 'styled-components';
 import { ChordName } from '../Theory/chords';
 import chords from '../Theory/chords.guitar';
 import { transposeNote } from '../Theory/notes';
@@ -11,14 +12,27 @@ export interface Props {
 }
 
 const StyledTable = styled.table`
-  td {
-    width: 30px;
-    height: 20px;
+  box-sizing: border-box;
 
-    border-bottom: 1px solid #808080;
-    border-right: 1px solid #c0c0c0;
+  width: 100%;
+  height: 100%;
+
+  text-align: center;
+
+  td {
+    min-width: 70px;
+    height: 40px;
+
+    border-bottom: ${({ theme }) => theme.global.borderSize.xsmall} solid
+      ${({ theme }) => theme.global.colors['background-contrast'].dark};
+    border-right: ${({ theme }) => theme.global.borderSize.xsmall} solid
+      ${({ theme }) => theme.global.colors['text'].dark};
+
     &:first-child {
-      border-right-width: 2px;
+      min-width: 40px;
+      border-right-width: ${({ theme }) => theme.global.borderSize.small};
+
+      background: inherit;
     }
   }
 
@@ -28,8 +42,20 @@ const StyledTable = styled.table`
   }
 `;
 
-const StyledTd = styled.td<{ isPushed?: boolean }>`
-  color: ${({ isPushed }) => (isPushed ? 'white' : '#808080')};
+const StyledTd = styled.td<{ isMuted: boolean; isPushed: boolean }>`
+  ${({ isMuted, isPushed, theme }) =>
+    isMuted
+      ? css`
+          color: ${theme.global.colors['text-xweak'].dark};
+        `
+      : css`
+          background: ${theme.global.colors['background-contrast'].dark};
+          color: ${isPushed
+            ? theme.global.colors['text'].dark
+            : theme.global.colors['text-weak'].dark};
+        `}
+
+  font-weight: ${({ isPushed }) => (isPushed ? 'bold' : 'normal')};
 `;
 
 const StringChord = ({ instrument = 'guitar', chord }: Props) => {
@@ -47,32 +73,28 @@ const StringChord = ({ instrument = 'guitar', chord }: Props) => {
   const tuning = tunings[instrument] ?? [null, null, null, null, null, null];
   const reversedTuning = [...tuning].reverse() as Tuning;
 
+  const reversedStringNotes = reversedPositions.map((p, j) =>
+    new Array(maxPosition).fill(undefined).map((_, i) => ({
+      isPushed: i === p,
+      isMuted: p === null,
+      note: transposeNote(reversedTuning[j], i),
+    })),
+  );
+
   return (
     <StyledTable>
       <tbody>
-        {reversedPositions.map((p, ii) => (
-          <tr key={ii}>
-            {new Array(maxPosition).fill(undefined).map((_, i) =>
-              p !== null ? (
-                <StyledTd key={i} isPushed={i === p}>
-                  {(i === 0 || i === p) && (
-                    <FormattedNote
-                      note={transposeNote(reversedTuning[ii], i)}
-                    />
-                  )}
-                </StyledTd>
-              ) : (
-                <StyledTd key={i}>
-                  {i === 0 ? (
-                    <FormattedNote
-                      note={transposeNote(reversedTuning[ii], i)}
-                    />
-                  ) : (
-                    '🞩'
-                  )}
-                </StyledTd>
-              ),
-            )}
+        {reversedStringNotes.map((s, j) => (
+          <tr key={j}>
+            {s.map(({ isPushed, isMuted, note }, i) => (
+              <StyledTd key={note} isMuted={isMuted} isPushed={isPushed}>
+                {i === 0 || isPushed ? (
+                  <FormattedNote note={note} />
+                ) : (
+                  <Text>{isMuted && '🞩'}</Text>
+                )}
+              </StyledTd>
+            ))}
           </tr>
         ))}
       </tbody>
