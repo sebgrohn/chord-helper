@@ -50,7 +50,7 @@ export const intervalNames: Record<number, string> = {
 
 const notePattern = /^\s*([A-G]#?)(\d)\s*$/;
 
-const getNoteParts = (note: Note): [NoteName, OctaveNumber] => {
+export const getNoteParts = (note: Note): [NoteName, OctaveNumber] => {
   const [_, noteName, octave] = notePattern.exec(note) ?? [];
   return [noteName as NoteName, Number.parseInt(octave) as OctaveNumber];
 };

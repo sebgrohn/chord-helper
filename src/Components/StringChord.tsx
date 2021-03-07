@@ -1,14 +1,16 @@
-import { Text } from 'grommet';
+import { Close } from 'grommet-icons';
 import styled, { css } from 'styled-components';
 import { ChordName } from '../Theory/chords';
 import chords from '../Theory/chords.guitar';
-import { transposeNote } from '../Theory/notes';
+import { getNoteParts, NoteName, transposeNote } from '../Theory/notes';
 import tunings, { InstrumentName, Tuning } from '../Theory/tunings.guitar';
 import FormattedNote from './FormattedNote';
 
 export interface Props {
   instrument?: InstrumentName;
   chord: ChordName | undefined;
+  highlightedNote: NoteName | undefined;
+  onHighlightNote: (noteToSelect: NoteName | undefined) => void;
 }
 
 const StyledTable = styled.table`
@@ -23,8 +25,8 @@ const StyledTable = styled.table`
   text-align: center;
 
   td {
-    min-width: 70px;
-    height: 40px;
+    min-width: 36px;
+    height: 36px;
 
     border-bottom: ${({ theme }) => theme.global.borderSize.xsmall} solid
       ${({ theme }) => theme.global.colors['background-contrast'].dark};
@@ -32,7 +34,7 @@ const StyledTable = styled.table`
       ${({ theme }) => theme.global.colors['text'].dark};
 
     &:first-child {
-      min-width: 40px;
+      min-width: 24px;
       border-right-width: ${({ theme }) => theme.global.borderSize.small};
 
       background: inherit;
@@ -46,46 +48,53 @@ const StyledTable = styled.table`
 `;
 
 const PushedNoteCircle = styled.div`
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 18px;
   text-align: center;
 `;
 
 const StyledTd = styled.td<{
   isStringMuted: boolean;
-  isNoteVisible: boolean;
-  isNoteActive: boolean;
-  isNotePushed: boolean;
+  isVisible: boolean;
+  isActive: boolean;
+  isPushed: boolean;
 }>`
-  ${({ isStringMuted, isNoteActive, theme }) =>
+  ${({ isStringMuted, isActive, theme }) =>
     isStringMuted
       ? css`
           color: ${theme.global.colors['text-xweak'].dark};
         `
       : css`
           background: ${theme.global.colors['background-contrast'].dark};
-          color: ${isNoteActive
+          color: ${isActive
             ? theme.global.colors['text'].dark
             : theme.global.colors['text-weak'].dark};
         `}
 
-  font-weight: ${({ isNoteActive }) => (isNoteActive ? 'bold' : 'normal')};
+  font-weight: ${({ isActive }) => (isActive ? 'bold' : 'normal')};
 
   ${PushedNoteCircle} {
-    display: ${({ isNoteVisible }) =>
-      isNoteVisible ? 'inline-block' : 'none'};
+    display: ${({ isVisible }) => (isVisible ? 'inline-block' : 'none')};
 
-    background: ${({ isNotePushed, theme }) =>
-      isNotePushed ? theme.global.colors['border'].dark : 'transparent'};
+    background: ${({ isPushed, theme }) =>
+      isPushed ? theme.global.colors['border'].dark : 'transparent'};
   }
+
+  ${({ isVisible }) =>
+    isVisible &&
+    css`
+      & > :nth-child(2) {
+        display: none;
+      }
+    `}
 
   &:hover {
     ${PushedNoteCircle} {
       display: inline-block;
 
-      background: ${({ isNotePushed, theme }) =>
-        isNotePushed
+      background: ${({ isPushed, theme }) =>
+        isPushed
           ? theme.global.colors['accent-1']
           : theme.global.colors['background-contrast'].dark};
 
@@ -98,7 +107,12 @@ const StyledTd = styled.td<{
   }
 `;
 
-const StringChord = ({ instrument = 'guitar', chord }: Props) => {
+const StringChord = ({
+  instrument = 'guitar',
+  chord,
+  highlightedNote,
+  onHighlightNote,
+}: Props) => {
   const chordsForInstrument = chords[instrument];
   const stringPositions = (chord &&
     chord in chordsForInstrument &&
@@ -114,13 +128,19 @@ const StringChord = ({ instrument = 'guitar', chord }: Props) => {
   const reversedTuning = [...tuning].reverse() as Tuning;
 
   const reversedStringNotes = reversedPositions.map((p, j) =>
-    new Array(maxPosition).fill(undefined).map((_, i) => ({
-      isStringMuted: p === null,
-      isNoteVisible: i === p || i === 0,
-      isNoteActive: i === p,
-      isNotePushed: i === p && i !== 0,
-      note: transposeNote(reversedTuning[j], i),
-    })),
+    new Array(maxPosition).fill(undefined).map((_, i) => {
+      const note = transposeNote(reversedTuning[j], i);
+      const [noteName] = getNoteParts(note);
+      return {
+        isStringMuted: p === null,
+        isVisible: i === p || i === 0,
+        isActive: i === p,
+        isPushed: i === p && i !== 0,
+        isHighlighted: highlightedNote === noteName,
+        note,
+        noteName,
+      };
+    }),
   );
 
   return (
@@ -129,27 +149,29 @@ const StringChord = ({ instrument = 'guitar', chord }: Props) => {
         {reversedStringNotes.map((s, j) => (
           <tr key={j}>
             {s.map(
-              (
-                {
-                  isStringMuted,
-                  isNoteVisible,
-                  isNoteActive,
-                  isNotePushed,
-                  note,
-                },
-                i,
-              ) => (
+              ({
+                isStringMuted,
+                isVisible,
+                isActive,
+                isPushed,
+                isHighlighted,
+                note,
+                noteName,
+              }) => (
                 <StyledTd
-                  key={note}
+                  key={`${j}${note}`}
                   isStringMuted={isStringMuted}
-                  isNoteVisible={isNoteVisible}
-                  isNoteActive={isNoteActive}
-                  isNotePushed={isNotePushed}
+                  isVisible={isVisible || isHighlighted}
+                  isActive={isActive || isHighlighted}
+                  isPushed={isPushed}
+                  onClick={() =>
+                    onHighlightNote(isHighlighted ? undefined : noteName)
+                  }
                 >
                   <PushedNoteCircle>
                     <FormattedNote note={note} />
                   </PushedNoteCircle>
-                  {isStringMuted && !isNoteVisible && <Text>🞩</Text>}
+                  {isStringMuted && !isVisible && <Close size="small" />}
                 </StyledTd>
               ),
             )}
