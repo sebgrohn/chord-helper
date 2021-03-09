@@ -1,15 +1,22 @@
 import { Footer, Grommet, Header, Heading, Main, Text } from 'grommet';
-import React, { useCallback, useReducer } from 'react';
+import React, { useCallback } from 'react';
 import './App.css';
 import ChordCardCollection from './Components/ChordCardCollection';
 import ChordSelector from './Components/ChordSelector';
+import useStoringReducer from './Hooks/useStoringReducer';
 import * as actions from './Store/actions';
 import reducer, { initialState } from './Store/reducer';
 import * as selectors from './Store/selectors';
 import theme from './theme';
 
+const applicationStateStorageKey = 'applicationState';
+
 function App() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useStoringReducer(
+    applicationStateStorageKey,
+    reducer,
+    initialState,
+  );
 
   const selectedChords = selectors.getSelectedChords(state);
   const availableChords = selectors.getAvailableChords(state);
