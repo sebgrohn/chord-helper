@@ -21,8 +21,8 @@ function App() {
   const selectedChords = selectors.getSelectedChords(state);
   const availableChords = selectors.getAvailableChords(state);
 
-  const handleChordSelected = useCallback(
-    (newChord) => dispatch(actions.addChord(newChord)),
+  const handleAddChord = useCallback(
+    (chordToAdd) => dispatch(actions.addChord(chordToAdd)),
     [dispatch],
   );
 
@@ -42,10 +42,7 @@ function App() {
         </Heading>
       </Header>
       <Main pad="large" gap="medium">
-        <ChordSelector
-          chords={availableChords}
-          onChordSelected={handleChordSelected}
-        />
+        <ChordSelector chords={availableChords} onAddChord={handleAddChord} />
         <ChordCardCollection
           chords={selectedChords}
           onRemoveChord={handleRemoveChord}

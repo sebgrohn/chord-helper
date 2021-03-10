@@ -4,11 +4,10 @@ import { ChordName } from '../Theory/chords';
 
 export interface Props {
   chords: ChordName[];
-  onChordSelected: (newSelectedChord: ChordName) => void;
+  onAddChord: (chordToAdd: ChordName) => void;
 }
 
-const ChordSelector = ({ chords, onChordSelected }: Props) => {
-  const [selectedChord, setSelectedChord] = useState();
+const ChordSelector = ({ chords, onAddChord }: Props) => {
   const [searchString, setSearchString] = useState('');
 
   const matchingChords = useMemo(
@@ -23,16 +22,14 @@ const ChordSelector = ({ chords, onChordSelected }: Props) => {
 
   const handleChange = useCallback(
     ({ value }) => {
-      setSelectedChord(undefined);
       setSearchString('');
-      onChordSelected(value as ChordName);
+      onAddChord(value as ChordName);
     },
-    [onChordSelected],
+    [onAddChord],
   );
 
   return (
     <Select
-      value={selectedChord}
       options={matchingChords}
       valueKey={{ key: 'value', reduce: true }}
       labelKey={(c) => c.label}
