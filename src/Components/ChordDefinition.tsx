@@ -1,13 +1,15 @@
-import { Box, Card, Heading, Text } from 'grommet';
+import { Box, Button, Card, Heading, Text } from 'grommet';
+import { Trash } from 'grommet-icons';
 import { ChordName, getChordNotes } from '../Theory/chords';
 import FormattedChord from './FormattedChord';
 import FormattedNote from './FormattedNote';
 
 export interface Props {
   chord?: ChordName;
+  onRemoveChord: () => void;
 }
 
-const ChordDefinition = ({ chord }: Props) => {
+const ChordDefinition = ({ chord, onRemoveChord }: Props) => {
   if (!chord) {
     return null;
   }
@@ -34,6 +36,13 @@ const ChordDefinition = ({ chord }: Props) => {
             <FormattedNote note={n} />
           </Text>
         ))}
+      </Box>
+      <Box pad={{ horizontal: 'medium', vertical: 'small' }}>
+        <Button a11yTitle={`Remove chord ${chord}`} onClick={onRemoveChord}>
+          <Box>
+            <Trash />
+          </Box>
+        </Button>
       </Box>
     </>
   );

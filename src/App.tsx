@@ -26,6 +26,11 @@ function App() {
     [dispatch],
   );
 
+  const handleRemoveChord = useCallback(
+    (chordToRemove) => dispatch(actions.removeChord(chordToRemove)),
+    [dispatch],
+  );
+
   return (
     <Grommet full theme={theme} themeMode="dark">
       <Header
@@ -41,7 +46,10 @@ function App() {
           chords={availableChords}
           onChordSelected={handleChordSelected}
         />
-        <ChordCardCollection chords={selectedChords} />
+        <ChordCardCollection
+          chords={selectedChords}
+          onRemoveChord={handleRemoveChord}
+        />
       </Main>
       <Footer
         pad={{ vertical: 'small', horizontal: 'large' }}
