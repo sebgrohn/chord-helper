@@ -1,13 +1,21 @@
-import { Select } from 'grommet';
+import { Box, Button, Collapsible, Select } from 'grommet';
+import { Add, Checkmark, Edit } from 'grommet-icons';
 import { useCallback, useMemo, useState } from 'react';
 import { ChordName } from '../Theory/chords';
 
 export interface Props {
   chords: ChordName[];
+  isEditing: boolean;
   onAddChord: (chordToAdd: ChordName) => void;
+  onIsEditingChange: (isEditing: boolean) => void;
 }
 
-const ChordSelector = ({ chords, onAddChord }: Props) => {
+const ChordSelector = ({
+  chords,
+  isEditing,
+  onAddChord,
+  onIsEditingChange,
+}: Props) => {
   const [searchString, setSearchString] = useState('');
 
   const matchingChords = useMemo(
@@ -29,16 +37,39 @@ const ChordSelector = ({ chords, onAddChord }: Props) => {
   );
 
   return (
-    <Select
-      options={matchingChords}
-      valueKey={{ key: 'value', reduce: true }}
-      labelKey={(c) => c.label}
-      closeOnChange={false}
-      placeholder="Add chords"
-      searchPlaceholder="Search by name"
-      onSearch={setSearchString}
-      onChange={handleChange}
-    />
+    <Box direction="row" gap="small" justify="end" align="center">
+      <Collapsible open={isEditing} direction="horizontal">
+        <Select
+          icon={<Add />}
+          options={matchingChords}
+          valueKey={{ key: 'value', reduce: true }}
+          labelKey={(c) => c.label}
+          closeOnChange={false}
+          placeholder="Add chords"
+          searchPlaceholder="Search by name"
+          a11yTitle="Select chords to add"
+          onSearch={setSearchString}
+          onChange={handleChange}
+        />
+      </Collapsible>
+      <Button
+        icon={
+          <Box direction="row">
+            <Collapsible open={isEditing} direction="horizontal">
+              <Checkmark />
+            </Collapsible>
+            <Collapsible open={!isEditing} direction="horizontal">
+              <Edit />
+            </Collapsible>
+          </Box>
+        }
+        a11yTitle={
+          isEditing ? 'Done adding/removing chords' : 'Add/remove chords'
+        }
+        primary={isEditing}
+        onClick={() => onIsEditingChange(!isEditing)}
+      />
+    </Box>
   );
 };
 

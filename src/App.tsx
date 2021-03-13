@@ -1,5 +1,5 @@
 import { Footer, Grommet, Header, Heading, Main, Text } from 'grommet';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import './App.css';
 import ChordCardCollection from './Components/ChordCardCollection';
 import ChordSelector from './Components/ChordSelector';
@@ -20,6 +20,9 @@ function App() {
 
   const selectedChords = selectors.getSelectedChords(state);
   const availableChords = selectors.getAvailableChords(state);
+
+  // Start in edit mode if no chords selected
+  const [isEditing, setIsEditing] = useState(selectedChords.length === 0);
 
   const handleAddChord = useCallback(
     (chordToAdd) => dispatch(actions.addChord(chordToAdd)),
@@ -42,9 +45,15 @@ function App() {
         </Heading>
       </Header>
       <Main pad="large" gap="medium">
-        <ChordSelector chords={availableChords} onAddChord={handleAddChord} />
+        <ChordSelector
+          chords={availableChords}
+          isEditing={isEditing}
+          onAddChord={handleAddChord}
+          onIsEditingChange={setIsEditing}
+        />
         <ChordCardCollection
           chords={selectedChords}
+          isEditing={isEditing}
           onRemoveChord={handleRemoveChord}
         />
       </Main>

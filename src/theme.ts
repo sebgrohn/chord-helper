@@ -50,6 +50,12 @@ const theme = deepMerge(grommet, {
     },
   },
 
+  button: {
+    border: {
+      radius: '3px',
+    },
+  },
+
   card: {
     container: {
       border: 'solid',

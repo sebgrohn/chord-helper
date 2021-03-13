@@ -6,10 +6,11 @@ import ChordCard from './ChordCard';
 
 export interface Props {
   chords: ChordName[];
+  isEditing: boolean;
   onRemoveChord: (chordToRemove: ChordName) => void;
 }
 
-const ChordCardCollection = ({ chords, onRemoveChord }: Props) => {
+const ChordCardCollection = ({ chords, isEditing, onRemoveChord }: Props) => {
   const [highlightedNote, setHighlightedNote] = useState<NoteName>();
 
   return (
@@ -18,6 +19,7 @@ const ChordCardCollection = ({ chords, onRemoveChord }: Props) => {
         <ChordCard
           key={c}
           chord={c}
+          isEditing={isEditing}
           highlightedNote={highlightedNote}
           onRemoveChord={onRemoveChord}
           onHighlightNote={setHighlightedNote}

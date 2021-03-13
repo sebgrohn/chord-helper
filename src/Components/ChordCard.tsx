@@ -6,6 +6,7 @@ import StringChord from './StringChord';
 
 export interface Props {
   chord: ChordName;
+  isEditing: boolean;
   highlightedNote: NoteName | undefined;
   onRemoveChord: (chordToRemove: ChordName) => void;
   onHighlightNote: (noteToSelect: NoteName | undefined) => void;
@@ -13,6 +14,7 @@ export interface Props {
 
 const ChordCard = ({
   chord,
+  isEditing,
   highlightedNote,
   onRemoveChord,
   onHighlightNote,
@@ -25,6 +27,7 @@ const ChordCard = ({
     >
       <ChordDefinition
         chord={chord}
+        isEditing={isEditing}
         onRemoveChord={() => onRemoveChord(chord)}
       />
     </CardHeader>

@@ -1,15 +1,17 @@
-import { Box, Button, Card, Heading, Text } from 'grommet';
+import { Box, Button, Card, Collapsible, Heading, Text } from 'grommet';
 import { Trash } from 'grommet-icons';
+import { Fragment } from 'react';
 import { ChordName, getChordNotes } from '../Theory/chords';
 import FormattedChord from './FormattedChord';
 import FormattedNote from './FormattedNote';
 
 export interface Props {
   chord?: ChordName;
+  isEditing: boolean;
   onRemoveChord: () => void;
 }
 
-const ChordDefinition = ({ chord, onRemoveChord }: Props) => {
+const ChordDefinition = ({ chord, isEditing, onRemoveChord }: Props) => {
   if (!chord) {
     return null;
   }
@@ -27,22 +29,25 @@ const ChordDefinition = ({ chord, onRemoveChord }: Props) => {
         </Heading>
       </Card>
       <Box
-        pad={{ horizontal: 'medium', vertical: 'small' }}
         direction="row"
+        pad={{ horizontal: 'small' }}
         gap="small"
+        align="center"
       >
-        {chordNotes.map((n) => (
-          <Text key={n}>
-            <FormattedNote note={n} />
-          </Text>
-        ))}
-      </Box>
-      <Box pad={{ horizontal: 'medium', vertical: 'small' }}>
-        <Button a11yTitle={`Remove chord ${chord}`} onClick={onRemoveChord}>
-          <Box>
-            <Trash />
-          </Box>
-        </Button>
+        <Box direction="row" pad={{ top: 'xsmall' }} gap="small">
+          {chordNotes.map((n) => (
+            <Text key={n}>
+              <FormattedNote note={n} />
+            </Text>
+          ))}
+        </Box>
+        <Collapsible open={isEditing} direction="horizontal">
+          <Button
+            icon={<Trash />}
+            a11yTitle={`Remove chord ${chord}`}
+            onClick={onRemoveChord}
+          />
+        </Collapsible>
       </Box>
     </>
   );
