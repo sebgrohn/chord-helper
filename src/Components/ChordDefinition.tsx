@@ -34,12 +34,15 @@ const ChordDefinition = ({ chord, isEditing, onRemoveChord }: Props) => {
         gap="small"
         align="center"
       >
-        <Box direction="row" pad={{ top: 'xsmall' }} gap="small">
-          {chordNotes.map((n) => (
-            <Text key={n}>
-              <FormattedNote note={n} />
-            </Text>
-          ))}
+        <Box pad={{ top: 'xsmall' }}>
+          <Text>
+            {chordNotes.map((n, i) => (
+              <Fragment key={n}>
+                {i !== 0 && ' '}
+                <FormattedNote note={n} />
+              </Fragment>
+            ))}
+          </Text>
         </Box>
         <Collapsible open={isEditing} direction="horizontal">
           <Button
