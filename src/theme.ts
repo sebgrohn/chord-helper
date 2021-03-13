@@ -34,6 +34,11 @@ const theme = deepMerge(grommet, {
         dark: '#d1ad7080', // semitransparent gold
         // light: '#d1ad7080',
       },
+
+      'border-semi': {
+        dark: '#d1ad7040', // semi-semitransparent gold
+        // light: '#d1ad7080',
+      },
     },
 
     font: {

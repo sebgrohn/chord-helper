@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { ChordName } from '../Theory/chords';
 import { NoteName } from '../Theory/notes';
 import ChordCard from './ChordCard';
+import EmptyChordCard from './EmptyChordCard';
 
 export interface Props {
   chords: ChordName[];
@@ -15,16 +16,20 @@ const ChordCardCollection = ({ chords, isEditing, onRemoveChord }: Props) => {
 
   return (
     <Grid columns="medium" gap="small" justify="center">
-      {chords.map((c) => (
-        <ChordCard
-          key={c}
-          chord={c}
-          isEditing={isEditing}
-          highlightedNote={highlightedNote}
-          onRemoveChord={onRemoveChord}
-          onHighlightNote={setHighlightedNote}
-        />
-      ))}
+      {chords.length !== 0 ? (
+        chords.map((c) => (
+          <ChordCard
+            key={c}
+            chord={c}
+            isEditing={isEditing}
+            highlightedNote={highlightedNote}
+            onRemoveChord={onRemoveChord}
+            onHighlightNote={setHighlightedNote}
+          />
+        ))
+      ) : (
+        <EmptyChordCard />
+      )}
     </Grid>
   );
 };

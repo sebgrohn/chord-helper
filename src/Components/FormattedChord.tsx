@@ -14,14 +14,14 @@ const ChordModifier = styled.span`
 `;
 
 export interface Props {
-  chord: ChordName;
+  chord: ChordName | undefined;
 }
 
 const FormattedChord = ({ chord }: Props) => {
-  const [rootNoteName, hash, chordModifier] = getNoteParts(chord);
+  const [rootNoteName, hash, chordModifier] = chord ? getNoteParts(chord) : [];
   return (
     <span>
-      {rootNoteName}
+      {rootNoteName || <>&nbsp;</>}
       <sup>{hash && '♯'}</sup>
       {chordModifier && <ChordModifier>{chordModifier}</ChordModifier>}
     </span>

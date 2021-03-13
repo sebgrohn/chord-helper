@@ -1,22 +1,18 @@
 import { Box, Button, Card, Collapsible, Heading, Text } from 'grommet';
 import { Trash } from 'grommet-icons';
-import { Fragment } from 'react';
 import { ChordName, getChordNotes } from '../Theory/chords';
 import FormattedChord from './FormattedChord';
-import FormattedNote from './FormattedNote';
+import FormattedNotes from './FormattedNotes';
 
 export interface Props {
-  chord?: ChordName;
+  chord: ChordName | undefined;
   isEditing: boolean;
-  onRemoveChord: () => void;
+  onRemoveChord: (() => void) | undefined;
 }
 
 const ChordDefinition = ({ chord, isEditing, onRemoveChord }: Props) => {
-  if (!chord) {
-    return null;
-  }
+  const chordNotes = chord ? getChordNotes(chord) : [];
 
-  const chordNotes = getChordNotes(chord);
   return (
     <>
       <Card
@@ -36,12 +32,7 @@ const ChordDefinition = ({ chord, isEditing, onRemoveChord }: Props) => {
       >
         <Box pad={{ top: 'xsmall' }}>
           <Text>
-            {chordNotes.map((n, i) => (
-              <Fragment key={n}>
-                {i !== 0 && ' '}
-                <FormattedNote note={n} />
-              </Fragment>
-            ))}
+            <FormattedNotes notes={chordNotes} />
           </Text>
         </Box>
         <Collapsible open={isEditing} direction="horizontal">

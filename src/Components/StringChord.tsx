@@ -10,7 +10,7 @@ export interface Props {
   instrument?: InstrumentName;
   chord: ChordName | undefined;
   highlightedNote: NoteName | undefined;
-  onHighlightNote: (noteToSelect: NoteName | undefined) => void;
+  onHighlightNote: ((noteToSelect: NoteName | undefined) => void) | undefined;
 }
 
 const StyledTable = styled.table`
@@ -116,7 +116,7 @@ const StringChord = ({
   const chordsForInstrument = chords[instrument];
   const stringPositions = (chord &&
     chord in chordsForInstrument &&
-    chordsForInstrument[chord]) || [null, null, null, null, null, null];
+    chordsForInstrument[chord]) || [0, 0, 0, 0, 0, 0];
   const reversedPositions = [...stringPositions].reverse();
 
   const maxPosition =
@@ -164,8 +164,10 @@ const StringChord = ({
                   isVisible={isVisible || isHighlighted}
                   isActive={isActive || isHighlighted}
                   isPushed={isPushed}
-                  onClick={() =>
-                    onHighlightNote(isHighlighted ? undefined : noteName)
+                  onClick={
+                    onHighlightNote &&
+                    (() =>
+                      onHighlightNote(isHighlighted ? undefined : noteName))
                   }
                 >
                   <PushedNoteCircle>
