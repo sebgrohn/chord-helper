@@ -6,17 +6,9 @@ import { getNoteParts, NoteName, transposeNote } from '../Theory/notes';
 import tunings, { InstrumentName, Tuning } from '../Theory/tunings.guitar';
 import FormattedNote from './FormattedNote';
 
-export interface Props {
-  instrument?: InstrumentName;
-  chord: ChordName | undefined;
-  highlightedNote: NoteName | undefined;
-  onHighlightNote: ((noteToSelect: NoteName | undefined) => void) | undefined;
-}
-
 const StyledTable = styled.table`
   box-sizing: border-box;
 
-  cursor: pointer;
   user-select: none;
 
   width: 100%;
@@ -55,6 +47,7 @@ const PushedNoteCircle = styled.div`
 `;
 
 const StyledTd = styled.td<{
+  disabled: boolean;
   isStringMuted: boolean;
   isVisible: boolean;
   isActive: boolean;
@@ -89,27 +82,41 @@ const StyledTd = styled.td<{
       }
     `}
 
-  &:hover {
-    ${PushedNoteCircle} {
-      display: inline-block;
+  ${({ disabled, isPushed, theme }) =>
+    !disabled &&
+    css`
+      cursor: pointer;
 
-      background: ${({ isPushed, theme }) =>
-        isPushed
-          ? theme.global.colors['accent-1']
-          : theme.global.colors['background-contrast'].dark};
+      &:hover {
+        ${PushedNoteCircle} {
+          display: inline-block;
 
-      font-weight: bold;
-    }
+          background: ${isPushed
+            ? theme.global.colors['accent-1']
+            : theme.global.colors['background-contrast'].dark};
 
-    & > :nth-child(2) {
-      display: none;
-    }
-  }
+          font-weight: bold;
+        }
+
+        & > :nth-child(2) {
+          display: none;
+        }
+      }
+    `}
 `;
+
+export interface Props {
+  instrument?: InstrumentName;
+  chord: ChordName | undefined;
+  disabled: boolean;
+  highlightedNote: NoteName | undefined;
+  onHighlightNote: ((noteToSelect: NoteName | undefined) => void) | undefined;
+}
 
 const StringChord = ({
   instrument = 'guitar',
   chord,
+  disabled,
   highlightedNote,
   onHighlightNote,
 }: Props) => {
@@ -136,7 +143,7 @@ const StringChord = ({
         isVisible: i === p || i === 0,
         isActive: i === p,
         isPushed: i === p && i !== 0,
-        isHighlighted: highlightedNote === noteName,
+        isHighlighted: !disabled && highlightedNote === noteName,
         note,
         noteName,
       };
@@ -160,14 +167,16 @@ const StringChord = ({
               }) => (
                 <StyledTd
                   key={`${j}${note}`}
+                  disabled={disabled}
                   isStringMuted={isStringMuted}
                   isVisible={isVisible || isHighlighted}
                   isActive={isActive || isHighlighted}
                   isPushed={isPushed}
                   onClick={
-                    onHighlightNote &&
-                    (() =>
-                      onHighlightNote(isHighlighted ? undefined : noteName))
+                    !disabled && onHighlightNote
+                      ? () =>
+                          onHighlightNote(isHighlighted ? undefined : noteName)
+                      : undefined
                   }
                 >
                   <PushedNoteCircle>

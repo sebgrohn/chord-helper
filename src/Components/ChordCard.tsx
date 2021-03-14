@@ -37,6 +37,7 @@ const ChordCard = ({
     >
       <StringChord
         chord={chord}
+        disabled={isEditing || false}
         highlightedNote={highlightedNote}
         onHighlightNote={onHighlightNote}
       />
