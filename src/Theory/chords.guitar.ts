@@ -1,25 +1,141 @@
 import { ChordName } from './chords';
 import { InstrumentName } from './tunings.guitar';
 
-type StringPositions = (number | null)[];
+export type ChordType = 'simple' | 'barre';
 
-const chords: Record<
-  InstrumentName,
-  Partial<Record<ChordName, StringPositions>>
-> = {
-  guitar: {
-    C: [null, 3, 2, 0, 1, 0],
-    D: [null, null, 0, 2, 3, 2],
-    Dmin: [null, null, 0, 2, 3, 1],
-    E: [0, 2, 2, 1, 0, 0],
-    Emin: [0, 2, 2, 0, 0, 0],
-    // F: [1, 3, 3, 2, 1, 1],
-    G: [3, 2, 0, 0, 0, 3],
-    A: [null, 0, 2, 2, 2, 0],
-    Amin: [null, 0, 2, 2, 1, 0],
-    B: [null, 2, 4, 4, 4, 2],
-  },
-  guitalele: {},
+/**
+ * 1 = lowest string, 6 = highest string.
+ */
+export type StringId = 1 | 2 | 3 | 4 | 5 | 6;
+
+type StringInterval = [
+  /** From string (inclusive) */
+  StringId,
+  /** To string (inclusive) */
+  StringId,
+];
+
+export type FretId =
+  | 1
+  | 2
+  | 3
+  | 4
+  | 5
+  | 6
+  | 7
+  | 8
+  | 9
+  | 10
+  | 11
+  | 12
+  | 13
+  | 14
+  | 15
+  | 16
+  | 17
+  | 18
+  | 19;
+
+type StringPosition = [StringId | StringInterval, FretId];
+
+/**
+ * String and fret position (or null for unused), per finger (index -> pinky).
+ */
+type StringPositions = [
+  /** Index finger */
+  StringPosition | null,
+  /** Middle finger */
+  StringPosition | null,
+  /** Ring finger */
+  StringPosition | null,
+  /** Pinky finger */
+  StringPosition | null,
+];
+
+export interface ChordDefinition {
+  chord: ChordName;
+  type: ChordType;
+  positions: StringPositions;
+  mutedStrings: StringId[];
+}
+
+const chords: Partial<Record<InstrumentName, ChordDefinition[]>> = {
+  guitar: [
+    {
+      chord: 'C',
+      type: 'simple',
+      positions: [[5, 1], [3, 2], [2, 3], null],
+      mutedStrings: [1],
+    },
+    // { chord: 'Cmin', type: '', positions: [], mutedStrings: [] },
+    {
+      chord: 'D',
+      type: 'simple',
+      positions: [[4, 2], [6, 2], [5, 3], null],
+      mutedStrings: [1, 2],
+    },
+    {
+      chord: 'Dmin',
+      type: 'simple',
+      positions: [[6, 1], [4, 2], [5, 3], null],
+      mutedStrings: [1, 2],
+    },
+    {
+      chord: 'E',
+      type: 'simple',
+      positions: [[4, 1], [2, 2], [3, 2], null],
+      mutedStrings: [],
+    },
+    {
+      chord: 'Emin',
+      type: 'simple',
+      positions: [null, [2, 2], [3, 2], null],
+      mutedStrings: [],
+    },
+    {
+      chord: 'F',
+      type: 'barre',
+      positions: [
+        [[1, 6], 1],
+        [4, 2],
+        [2, 3],
+        [3, 3],
+      ],
+      mutedStrings: [],
+    },
+    // { chord: 'Fmin', type: '', positions: [], mutedStrings: [] },
+    {
+      chord: 'G',
+      type: 'simple',
+      positions: [[2, 2], [1, 3], [6, 3], null],
+      mutedStrings: [],
+    },
+    // { chord: 'Gmin', type: '', positions: [], mutedStrings: [] },
+    {
+      chord: 'A',
+      type: 'simple',
+      positions: [[3, 2], [4, 2], [5, 2], null],
+      mutedStrings: [1],
+    },
+    {
+      chord: 'Amin',
+      type: 'simple',
+      positions: [[5, 1], [3, 2], [4, 2], null],
+      mutedStrings: [1],
+    },
+    {
+      chord: 'B',
+      type: 'barre',
+      positions: [
+        [[2, 6], 2],
+        [3, 4],
+        [4, 4],
+        [5, 4],
+      ],
+      mutedStrings: [1],
+    },
+    // { chord: 'Bmin', type: '', positions: [], mutedStrings: [] },
+  ],
 };
 
 export default chords;

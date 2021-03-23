@@ -1,9 +1,9 @@
 import { Close } from 'grommet-icons';
 import styled, { css } from 'styled-components';
 import { ChordName } from '../Theory/chords';
-import chords from '../Theory/chords.guitar';
+import chords, { StringId } from '../Theory/chords.guitar';
 import { getNoteParts, NoteName, transposeNote } from '../Theory/notes';
-import tunings, { InstrumentName, Tuning } from '../Theory/tunings.guitar';
+import tunings, { InstrumentName } from '../Theory/tunings.guitar';
 import FormattedNote from './FormattedNote';
 
 const StyledTable = styled.table`
@@ -120,35 +120,61 @@ const StringChord = ({
   highlightedNote,
   onHighlightNote,
 }: Props) => {
-  const chordsForInstrument = chords[instrument];
-  const stringPositions = (chord &&
-    chord in chordsForInstrument &&
-    chordsForInstrument[chord]) || [0, 0, 0, 0, 0, 0];
-  const reversedPositions = [...stringPositions].reverse();
+  const chordsForInstrument = chords[instrument] || [];
+  const chordDefinition =
+    chord && chordsForInstrument.find((c) => c.chord === chord);
 
-  const maxPosition =
+  const stringPositions = chordDefinition?.positions ?? [
+    null,
+    null,
+    null,
+    null,
+  ];
+  const mutedStrings = chordDefinition?.mutedStrings ?? [];
+
+  const maxFret =
     stringPositions
-      .map((p) => p ?? 0)
+      .map((p) => (p && p[1]) ?? 0)
       .reduce((acc, p) => (acc > p ? acc : p), 4) + 1;
 
   const tuning = tunings[instrument] ?? [null, null, null, null, null, null];
-  const reversedTuning = [...tuning].reverse() as Tuning;
 
-  const reversedStringNotes = reversedPositions.map((p, j) =>
-    new Array(maxPosition).fill(undefined).map((_, i) => {
-      const note = transposeNote(reversedTuning[j], i);
-      const [noteName] = getNoteParts(note);
-      return {
-        isStringMuted: p === null,
-        isVisible: i === p || i === 0,
-        isActive: i === p,
-        isPushed: i === p && i !== 0,
-        isHighlighted: !disabled && highlightedNote === noteName,
-        note,
-        noteName,
-      };
-    }),
-  );
+  const reversedStringNotes = tuning
+    .map((s, j) => {
+      const stringId = (j + 1) as StringId;
+      const isStringMuted = mutedStrings.indexOf(stringId) >= 0;
+
+      const p = stringPositions
+        .filter((p) => {
+          if (!p) {
+            return false;
+          }
+
+          const [stringIdOrInterval] = p;
+          const [startStringId, endStringId] = Array.isArray(stringIdOrInterval)
+            ? stringIdOrInterval
+            : [stringIdOrInterval, stringIdOrInterval];
+
+          return stringId >= startStringId && stringId <= endStringId;
+        })
+        .map((p) => (p && p[1]) ?? 0)
+        .reduce((acc, p) => (acc > p ? acc : p), 0);
+
+      return new Array(maxFret).fill(undefined).map((_, i) => {
+        const note = transposeNote(s, i);
+        const [noteName] = getNoteParts(note);
+        return {
+          isStringMuted,
+          isVisible: i === p || i === 0,
+          isActive: i === p,
+          isPushed: i === p && i !== 0,
+          isHighlighted: !disabled && highlightedNote === noteName,
+          note,
+          noteName,
+        };
+      });
+    })
+    .reverse();
 
   return (
     <StyledTable>
