@@ -39,9 +39,9 @@ const StyledTable = styled.table`
   }
 `;
 
-const PushedNoteCircle = styled.div`
-  width: 34px;
-  height: 34px;
+const NoteCircle = styled.div`
+  width: 36px;
+  height: 36px;
   border-radius: 18px;
   text-align: center;
 `;
@@ -67,7 +67,7 @@ const StyledTd = styled.td<{
 
   font-weight: ${({ isActive }) => (isActive ? 'bold' : 'normal')};
 
-  ${PushedNoteCircle} {
+  ${NoteCircle} {
     display: ${({ isVisible }) => (isVisible ? 'inline-block' : 'none')};
 
     background: ${({ isPushed, theme }) =>
@@ -88,7 +88,7 @@ const StyledTd = styled.td<{
       cursor: pointer;
 
       &:hover {
-        ${PushedNoteCircle} {
+        ${NoteCircle} {
           display: inline-block;
 
           background: ${isPushed
@@ -142,9 +142,9 @@ const StringChord = ({
   const reversedStringNotes = tuning
     .map((s, j) => {
       const stringId = (j + 1) as StringId;
-      const isStringMuted = mutedStrings.indexOf(stringId) >= 0;
+      const isStringMuted = mutedStrings.includes(stringId);
 
-      const p = stringPositions
+      const ps = stringPositions
         .filter((p) => {
           if (!p) {
             return false;
@@ -157,17 +157,16 @@ const StringChord = ({
 
           return stringId >= startStringId && stringId <= endStringId;
         })
-        .map((p) => (p && p[1]) ?? 0)
-        .reduce((acc, p) => (acc > p ? acc : p), 0);
+        .map((p) => (p && p[1]) ?? 0) as number[];
 
       return new Array(maxFret).fill(undefined).map((_, i) => {
         const note = transposeNote(s, i);
         const [noteName] = getNoteParts(note);
         return {
           isStringMuted,
-          isVisible: i === p || i === 0,
-          isActive: i === p,
-          isPushed: i === p && i !== 0,
+          isVisible: ps.includes(i) || i === 0,
+          isActive: ps.includes(i),
+          isPushed: ps.includes(i) && i !== 0,
           isHighlighted: !disabled && highlightedNote === noteName,
           note,
           noteName,
@@ -205,10 +204,10 @@ const StringChord = ({
                       : undefined
                   }
                 >
-                  <PushedNoteCircle>
+                  <NoteCircle>
                     <FormattedNote note={note} />
-                  </PushedNoteCircle>
-                  {isStringMuted && !isVisible && <Close size="small" />}
+                  </NoteCircle>
+                  {isStringMuted && <Close size="small" />}
                 </StyledTd>
               ),
             )}
