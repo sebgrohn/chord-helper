@@ -1,77 +1,51 @@
+import { Box, Grid, Text } from 'grommet';
 import { Close } from 'grommet-icons';
 import styled, { css } from 'styled-components';
 import { ChordName } from '../Theory/chords';
-import chords, { StringId } from '../Theory/chords.guitar';
+import chords, {
+  FretId,
+  getStringPositionsParts,
+  StringId,
+} from '../Theory/chords.guitar';
 import { getNoteParts, NoteName, transposeNote } from '../Theory/notes';
 import tunings, { InstrumentName } from '../Theory/tunings.guitar';
 import FormattedNote from './FormattedNote';
 
-const StyledTable = styled.table`
-  box-sizing: border-box;
-
-  user-select: none;
-
-  width: 100%;
-  height: 100%;
-
-  text-align: center;
-
-  td {
-    min-width: 36px;
-    height: 36px;
-
-    border-bottom: ${({ theme }) => theme.global.borderSize.xsmall} solid
-      ${({ theme }) => theme.global.colors['background-contrast'].dark};
-    border-right: ${({ theme }) => theme.global.borderSize.xsmall} solid
-      ${({ theme }) => theme.global.colors['text'].dark};
-
-    &:first-child {
-      min-width: 24px;
-      border-right-width: ${({ theme }) => theme.global.borderSize.small};
-
-      background: inherit;
-    }
-  }
-
-  tr:last-child > td,
-  td:first-child {
-    border-bottom: none;
-  }
+const PushedFingerBox = styled(Box)`
+  width: 36px;
+  height: calc(100% - 12px);
+  justify-self: center;
+  border-radius: 18px;
 `;
 
-const NoteCircle = styled.div`
+const NoteCircleText = styled(Text)`
   width: 36px;
   height: 36px;
   border-radius: 18px;
   text-align: center;
 `;
 
-const StyledTd = styled.td<{
+const NoteBox = styled(Box)<{
   disabled: boolean;
   isStringMuted: boolean;
   isVisible: boolean;
   isActive: boolean;
   isPushed: boolean;
 }>`
-  ${({ isStringMuted, isActive, theme }) =>
+  width: 100%;
+  height: 100%;
+
+  color: ${({ isStringMuted, isActive, theme }) =>
     isStringMuted
-      ? css`
-          color: ${theme.global.colors['text-xweak'].dark};
-        `
-      : css`
-          background: ${theme.global.colors['background-contrast'].dark};
-          color: ${isActive
-            ? theme.global.colors['text'].dark
-            : theme.global.colors['text-weak'].dark};
-        `}
+      ? theme.global.colors['text-xweak'].dark
+      : isActive
+      ? theme.global.colors['text'].dark
+      : theme.global.colors['text-weak'].dark};
 
   font-weight: ${({ isActive }) => (isActive ? 'bold' : 'normal')};
 
-  ${NoteCircle} {
+  ${NoteCircleText} {
     display: ${({ isVisible }) => (isVisible ? 'inline-block' : 'none')};
-
-    background: ${({ isPushed, theme }) =>
-      isPushed ? theme.global.colors['border'].dark : 'transparent'};
   }
 
   ${({ isVisible }) =>
@@ -88,7 +62,7 @@ const StyledTd = styled.td<{
       cursor: pointer;
 
       &:hover {
-        ${NoteCircle} {
+        ${NoteCircleText} {
           display: inline-block;
 
           background: ${isPushed
@@ -104,6 +78,17 @@ const StyledTd = styled.td<{
       }
     `}
 `;
+
+/**
+ * All parameters are zero-based, inclusive.
+ *
+ * @param x1 Start column (zero-based, inclusive)
+ * @param y1 Start row (zero-based, inclusive)
+ * @param x2 Optional end column (zero-based, inclusive), defaults to `x1`
+ * @param y2 Optional end row (zero-based, inclusive), defaults to `y1`
+ */
+const getGridArea = (x1: number, y1: number, x2?: number, y2?: number) =>
+  `${y1 + 1}/${x1 + 1} / ${(y2 ?? y1) + 1 + 1}/${(x2 ?? x1) + 1 + 1}`;
 
 export interface Props {
   instrument?: InstrumentName;
@@ -130,91 +115,148 @@ const StringChord = ({
     null,
     null,
   ];
+  const stringPositionsParts = getStringPositionsParts(stringPositions);
   const mutedStrings = chordDefinition?.mutedStrings ?? [];
 
-  const maxFret =
-    stringPositions
-      .map((p) => (p && p[1]) ?? 0)
-      .reduce((acc, p) => (acc > p ? acc : p), 4) + 1;
+  const maxFretId = (stringPositionsParts.reduce(
+    (acc, { fretId }) => Math.max(acc, fretId),
+    4,
+  ) + 1) as FretId;
 
   const tuning = tunings[instrument] ?? [null, null, null, null, null, null];
+  const maxStringIndex = tuning.length - 1;
 
-  const reversedStringNotes = tuning
-    .map((s, j) => {
-      const stringId = (j + 1) as StringId;
-      const isStringMuted = mutedStrings.includes(stringId);
+  const strings = tuning.map((_, stringIndex) => ({
+    gridArea: getGridArea(
+      1,
+      maxStringIndex - stringIndex,
+      maxFretId,
+      maxStringIndex - stringIndex,
+    ),
+    isMuted: mutedStrings.includes((stringIndex + 1) as StringId),
+  }));
 
-      const ps = stringPositions
-        .filter((p) => {
-          if (!p) {
-            return false;
-          }
+  const frets = new Array(maxFretId).fill(undefined).map((_, fretId) => ({
+    gridArea: getGridArea(fretId, 0, fretId, maxStringIndex),
+    isStart: fretId === 0,
+  }));
 
-          const [stringIdOrInterval] = p;
-          const [startStringId, endStringId] = Array.isArray(stringIdOrInterval)
-            ? stringIdOrInterval
-            : [stringIdOrInterval, stringIdOrInterval];
+  const positions = stringPositionsParts.map(
+    ({ startStringId, endStringId, fretId, fingerIndex }) => ({
+      gridArea: getGridArea(
+        fretId,
+        maxStringIndex - (endStringId - 1),
+        fretId,
+        maxStringIndex - (startStringId - 1),
+      ),
+      finger: fingerIndex + 1,
+    }),
+  );
 
-          return stringId >= startStringId && stringId <= endStringId;
-        })
-        .map((p) => (p && p[1]) ?? 0) as number[];
+  const notes = tuning.map((stringNote, stringIndex) => {
+    const stringId = (stringIndex + 1) as StringId;
+    const isStringMuted = mutedStrings.includes(stringId);
 
-      return new Array(maxFret).fill(undefined).map((_, i) => {
-        const note = transposeNote(s, i);
-        const [noteName] = getNoteParts(note);
-        return {
-          isStringMuted,
-          isVisible: ps.includes(i) || i === 0,
-          isActive: ps.includes(i),
-          isPushed: ps.includes(i) && i !== 0,
-          isHighlighted: !disabled && highlightedNote === noteName,
-          note,
-          noteName,
-        };
-      });
-    })
-    .reverse();
+    return new Array(maxFretId).fill(undefined).map((_, i) => {
+      const isActive = !!stringPositionsParts.find(
+        ({ startStringId, endStringId, fretId }) =>
+          stringId >= startStringId && stringId <= endStringId && i === fretId,
+      );
+      const note = transposeNote(stringNote, i);
+      const [noteName] = getNoteParts(note);
+
+      return {
+        gridArea: getGridArea(i, maxStringIndex - stringIndex),
+        isStringMuted,
+        isVisible: isActive || i === 0,
+        isActive: isActive,
+        isPushed: isActive && i !== 0,
+        isHighlighted: !disabled && highlightedNote === noteName,
+        note,
+        noteName,
+      };
+    });
+  });
 
   return (
-    <StyledTable>
-      <tbody>
-        {reversedStringNotes.map((s, j) => (
-          <tr key={j}>
-            {s.map(
-              ({
-                isStringMuted,
-                isVisible,
-                isActive,
-                isPushed,
-                isHighlighted,
-                note,
-                noteName,
-              }) => (
-                <StyledTd
-                  key={`${j}${note}`}
-                  disabled={disabled}
-                  isStringMuted={isStringMuted}
-                  isVisible={isVisible || isHighlighted}
-                  isActive={isActive || isHighlighted}
-                  isPushed={isPushed}
-                  onClick={
-                    !disabled && onHighlightNote
-                      ? () =>
-                          onHighlightNote(isHighlighted ? undefined : noteName)
-                      : undefined
-                  }
-                >
-                  <NoteCircle>
-                    <FormattedNote note={note} />
-                  </NoteCircle>
-                  {isStringMuted && <Close size="small" />}
-                </StyledTd>
-              ),
-            )}
-          </tr>
-        ))}
-      </tbody>
-    </StyledTable>
+    <Grid
+      columns={Array(maxFretId).fill('1fr')}
+      rows={Array(maxStringIndex + 1).fill('xxsmall')}
+      gap={{ row: 'xxsmall' }}
+    >
+      {strings.map(({ gridArea, isMuted }) => (
+        <Box
+          key={gridArea}
+          gridArea={gridArea}
+          background={!isMuted ? 'background-contrast' : undefined}
+          border={[
+            {
+              side: 'bottom',
+              color: 'background-contrast',
+              size: 'small',
+            },
+          ]}
+        />
+      ))}
+
+      {frets.map(({ gridArea, isStart }) => (
+        <Box
+          key={gridArea}
+          gridArea={gridArea}
+          border={{
+            side: 'right',
+            color: 'text',
+            size: isStart ? 'small' : 'xsmall',
+          }}
+        />
+      ))}
+
+      {positions.map(({ gridArea, finger }) => (
+        <PushedFingerBox
+          key={gridArea}
+          gridArea={gridArea}
+          alignSelf="center"
+          background={{ dark: 'border' }}
+        />
+      ))}
+
+      {notes.map((s) =>
+        s.map(
+          ({
+            isStringMuted,
+            isVisible,
+            isActive,
+            isPushed,
+            isHighlighted,
+            note,
+            noteName,
+            gridArea,
+          }) => (
+            <NoteBox
+              key={gridArea}
+              gridArea={gridArea}
+              align="center"
+              justify="center"
+              disabled={disabled}
+              isStringMuted={isStringMuted}
+              isVisible={isVisible || isHighlighted}
+              isActive={isActive || isHighlighted}
+              isPushed={isPushed}
+              onClick={
+                !disabled && onHighlightNote
+                  ? () => onHighlightNote(isHighlighted ? undefined : noteName)
+                  : undefined
+              }
+            >
+              <NoteCircleText textAlign="center">
+                <FormattedNote note={note} />
+              </NoteCircleText>
+              {isStringMuted && <Close size="small" />}
+            </NoteBox>
+          ),
+        ),
+      )}
+    </Grid>
   );
 };
 

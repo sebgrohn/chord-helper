@@ -138,4 +138,24 @@ const chords: Partial<Record<InstrumentName, ChordDefinition[]>> = {
   ],
 };
 
+export const getStringPositionsParts = (stringPositions: StringPositions) =>
+  stringPositions
+    .map((pos, fingerIndex) => ({ pos, fingerIndex }))
+    .filter(
+      (x): x is { pos: StringPosition; fingerIndex: number } => x.pos != null,
+    )
+    .map(({ pos, fingerIndex }) => {
+      const [stringIdOrInterval, fretId] = pos;
+      const [startStringId, endStringId] = Array.isArray(stringIdOrInterval)
+        ? stringIdOrInterval
+        : [stringIdOrInterval, stringIdOrInterval];
+
+      return {
+        startStringId,
+        endStringId,
+        fretId,
+        fingerIndex,
+      };
+    });
+
 export default chords;
