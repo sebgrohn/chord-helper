@@ -7,7 +7,11 @@ import {
   useReducer,
 } from 'react';
 
-const createStoringReducer = <S, A>(
+export interface StoredState extends Record<any, any> {
+  version?: number;
+}
+
+const createStoringReducer = <S extends StoredState, A>(
   key: string,
   reducer: Reducer<S, A>,
 ): Reducer<S, A> => {
@@ -22,7 +26,10 @@ const createStoringReducer = <S, A>(
       writeTimeoutRef = window.setTimeout(() => {
         try {
           localStorage.setItem(key, JSON.stringify(newState));
-          console.log('Written to local storage', newState);
+          console.log(
+            `Written to local storage (version: ${newState.version})`,
+            newState,
+          );
         } catch (error) {
           // TODO
           console.error("Couldn't write to local storage.", error);
@@ -36,11 +43,14 @@ const createStoringReducer = <S, A>(
   return storingReducer;
 };
 
-const readStoredState = <S, _>(key: string, initialState: S): S | undefined => {
+const readStoredState = <S extends StoredState>(key: string): S | undefined => {
   try {
     const rawState = localStorage.getItem(key);
     const readState = rawState && JSON.parse(rawState);
-    console.log('Read from local storage', readState);
+    console.log(
+      `Read from local storage (version: ${readState?.version})`,
+      readState,
+    );
     return readState;
   } catch (error) {
     // TODO
@@ -48,24 +58,27 @@ const readStoredState = <S, _>(key: string, initialState: S): S | undefined => {
   }
 };
 
-const useStoringReducer = <R extends Reducer<any, any>>(
+const useStoringReducer = <R extends Reducer<any, any>, S extends StoredState>(
   key: string,
   reducer: R,
-  initialState: ReducerState<R>,
+  migrateState: (readState: StoredState) => S,
+  initialState: S,
   initializer?: undefined,
 ): [ReducerState<R>, Dispatch<ReducerAction<R>>] => {
-  const storingReducer = useMemo(() => createStoringReducer(key, reducer), [
-    key,
-    reducer,
-  ]);
-  const readState = useMemo(() => readStoredState(key, initialState), [
-    key,
-    initialState,
-  ]);
+  const storingReducer = useMemo(
+    () => createStoringReducer(key, reducer),
+    [key, reducer],
+  );
+  const readState = useMemo(() => readStoredState(key), [key]);
+
+  const migratedState = useMemo(
+    () => migrateState(readState ?? initialState),
+    [migrateState, readState, initialState],
+  );
 
   return useReducer(
     storingReducer,
-    readState ?? initialState,
+    migratedState,
     readState ? undefined : initializer,
   );
 };

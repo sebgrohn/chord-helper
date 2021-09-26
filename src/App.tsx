@@ -5,7 +5,7 @@ import ChordCardCollection from './Components/ChordCardCollection';
 import ChordSelector from './Components/ChordSelector';
 import useStoringReducer from './Hooks/useStoringReducer';
 import * as actions from './Store/actions';
-import reducer, { initialState } from './Store/reducer';
+import reducer, { initialState, migrateState } from './Store/reducer';
 import * as selectors from './Store/selectors';
 import theme from './theme';
 
@@ -15,6 +15,7 @@ function App() {
   const [state, dispatch] = useStoringReducer(
     applicationStateStorageKey,
     reducer,
+    migrateState,
     initialState,
   );
 

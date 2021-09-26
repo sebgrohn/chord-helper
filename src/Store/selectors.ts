@@ -1,5 +1,5 @@
 import chords from '../Theory/chords.guitar';
-import type { State } from './reducer';
+import type { State } from './Types/State';
 
 export const getSelectedChords = (state: State) => state.selectedChords;
 
