@@ -7,4 +7,15 @@ export interface StateVersion1 {
   selectedChords: ChordName[];
 }
 
-export type State = StateVersion1;
+export interface ChordSet {
+  name: string;
+  description: string;
+  selectedChords: ChordName[];
+}
+
+export interface StateVersion2 {
+  version: 2;
+  chordSets: ChordSet[];
+}
+
+export type State = StateVersion2;

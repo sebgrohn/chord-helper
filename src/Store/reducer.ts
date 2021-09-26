@@ -5,8 +5,14 @@ import migrations from './migrations';
 import type { State } from './Types/State';
 
 export const initialState: State = {
-  version: 1,
-  selectedChords: ['G', 'C', 'D'],
+  version: 2,
+  chordSets: [
+    {
+      name: 'Example: Leaving on a Jet Plane',
+      description: "Example chordset for John Denver's Leaving on a Jet Plane",
+      selectedChords: ['G', 'C', 'D'],
+    },
+  ],
 };
 
 export const migrateState = (state: StoredState): State => {
@@ -24,19 +30,36 @@ export const migrateState = (state: StoredState): State => {
 const reducer: Reducer<State, Action> = (state, action) => {
   switch (action.type) {
     case 'addChord':
-      return !state.selectedChords.find((c) => c === action.chord)
+      return !state.chordSets[0].selectedChords.find((c) => c === action.chord)
         ? {
             ...state,
-            selectedChords: [...state.selectedChords, action.chord],
+            chordSets: [
+              {
+                ...state.chordSets[0],
+                selectedChords: [
+                  ...state.chordSets[0].selectedChords,
+                  action.chord,
+                ],
+              },
+              ...state.chordSets.slice(1),
+            ],
           }
         : state;
 
     case 'removeChord':
-      return state.selectedChords.find((c) => c === action.chord)
+      return state.chordSets[0].selectedChords.find((c) => c === action.chord)
         ? {
             ...state,
-            selectedChords: [
-              ...state.selectedChords.filter((c) => c !== action.chord),
+            chordSets: [
+              {
+                ...state.chordSets[0],
+                selectedChords: [
+                  ...state.chordSets[0].selectedChords.filter(
+                    (c) => c !== action.chord,
+                  ),
+                ],
+              },
+              ...state.chordSets.slice(1),
             ],
           }
         : state;

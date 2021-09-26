@@ -1,7 +1,8 @@
 import chords from '../Theory/chords.guitar';
 import type { State } from './Types/State';
 
-export const getSelectedChords = (state: State) => state.selectedChords;
+export const getSelectedChords = (state: State) =>
+  state.chordSets[0].selectedChords;
 
 export const getAvailableChords = (state: State) => {
   const selectedChords = getSelectedChords(state);
