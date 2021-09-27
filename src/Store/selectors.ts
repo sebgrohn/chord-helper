@@ -1,13 +1,9 @@
 import chords from '../Theory/chords.guitar';
 import type { State } from './Types/State';
 
-export const getSelectedChords = (state: State) =>
-  state.chordSets[0].selectedChords;
+export const getChordSets = (state: State) => state.chordSets;
 
-export const getAvailableChords = (state: State) => {
-  const selectedChords = getSelectedChords(state);
+export const getAvailableChords = () => {
   const chordsForInstrument = chords['guitar'] ?? [];
-  return chordsForInstrument
-    .map((c) => c.chord)
-    .filter((c) => selectedChords.indexOf(c) < 0);
+  return chordsForInstrument.map((c) => c.chord);
 };

@@ -29,40 +29,50 @@ export const migrateState = (state: StoredState): State => {
 
 const reducer: Reducer<State, Action> = (state, action) => {
   switch (action.type) {
-    case 'addChord':
-      return !state.chordSets[0].selectedChords.find((c) => c === action.chord)
+    case 'addChord': {
+      const { chordSetIndex, chord } = action;
+      return !state.chordSets[chordSetIndex].selectedChords.find(
+        (c) => c === chord,
+      )
         ? {
             ...state,
             chordSets: [
+              ...state.chordSets.slice(0, chordSetIndex),
               {
-                ...state.chordSets[0],
+                ...state.chordSets[chordSetIndex],
                 selectedChords: [
-                  ...state.chordSets[0].selectedChords,
-                  action.chord,
+                  ...state.chordSets[chordSetIndex].selectedChords,
+                  chord,
                 ],
               },
-              ...state.chordSets.slice(1),
+              ...state.chordSets.slice(chordSetIndex + 1),
             ],
           }
         : state;
+    }
 
-    case 'removeChord':
-      return state.chordSets[0].selectedChords.find((c) => c === action.chord)
+    case 'removeChord': {
+      const { chordSetIndex, chord } = action;
+      return state.chordSets[chordSetIndex].selectedChords.find(
+        (c) => c === chord,
+      )
         ? {
             ...state,
             chordSets: [
+              ...state.chordSets.slice(0, chordSetIndex),
               {
-                ...state.chordSets[0],
+                ...state.chordSets[chordSetIndex],
                 selectedChords: [
-                  ...state.chordSets[0].selectedChords.filter(
-                    (c) => c !== action.chord,
+                  ...state.chordSets[chordSetIndex].selectedChords.filter(
+                    (c) => c !== chord,
                   ),
                 ],
               },
-              ...state.chordSets.slice(1),
+              ...state.chordSets.slice(chordSetIndex + 1),
             ],
           }
         : state;
+    }
 
     default:
       return state;

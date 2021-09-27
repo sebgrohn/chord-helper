@@ -6,14 +6,14 @@ import { ChordName } from '../Theory/chords';
 export interface Props {
   chords: ChordName[];
   isEditing: boolean;
-  onAddChord: (chordToAdd: ChordName) => void;
+  onAdd: (chordToAdd: ChordName) => void;
   onIsEditingChange: (isEditing: boolean) => void;
 }
 
 const ChordSelector = ({
   chords,
   isEditing,
-  onAddChord,
+  onAdd,
   onIsEditingChange,
 }: Props) => {
   const [searchString, setSearchString] = useState('');
@@ -31,9 +31,9 @@ const ChordSelector = ({
   const handleChange = useCallback(
     ({ value }) => {
       setSearchString('');
-      onAddChord(value as ChordName);
+      onAdd(value as ChordName);
     },
-    [onAddChord],
+    [onAdd],
   );
 
   return (

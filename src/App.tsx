@@ -1,8 +1,7 @@
 import { Footer, Grommet, Header, Heading, Main, Text } from 'grommet';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import './App.css';
-import ChordCardCollection from './Components/ChordCardCollection';
-import ChordSelector from './Components/ChordSelector';
+import ChordSetCollection from './Components/ChordSetCollection';
 import useStoringReducer from './Hooks/useStoringReducer';
 import * as actions from './Store/actions';
 import reducer, { initialState, migrateState } from './Store/reducer';
@@ -19,19 +18,18 @@ function App() {
     initialState,
   );
 
-  const selectedChords = selectors.getSelectedChords(state);
-  const availableChords = selectors.getAvailableChords(state);
-
-  // Start in edit mode if no chords selected
-  const [isEditing, setIsEditing] = useState(selectedChords.length === 0);
+  const chordSets = selectors.getChordSets(state);
+  const availableChords = selectors.getAvailableChords();
 
   const handleAddChord = useCallback(
-    (chordToAdd) => dispatch(actions.addChord(chordToAdd)),
+    (chordSetIndex, chordToAdd) =>
+      dispatch(actions.addChord(chordSetIndex, chordToAdd)),
     [dispatch],
   );
 
   const handleRemoveChord = useCallback(
-    (chordToRemove) => dispatch(actions.removeChord(chordToRemove)),
+    (chordSetIndex, chordToRemove) =>
+      dispatch(actions.removeChord(chordSetIndex, chordToRemove)),
     [dispatch],
   );
 
@@ -46,15 +44,10 @@ function App() {
         </Heading>
       </Header>
       <Main pad="large" gap="medium">
-        <ChordSelector
-          chords={availableChords}
-          isEditing={isEditing}
+        <ChordSetCollection
+          chordSets={chordSets}
+          availableChords={availableChords}
           onAddChord={handleAddChord}
-          onIsEditingChange={setIsEditing}
-        />
-        <ChordCardCollection
-          chords={selectedChords}
-          isEditing={isEditing}
           onRemoveChord={handleRemoveChord}
         />
       </Main>

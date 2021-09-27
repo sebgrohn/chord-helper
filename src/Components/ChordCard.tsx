@@ -8,7 +8,7 @@ export interface Props {
   chord?: ChordName;
   isEditing?: boolean;
   highlightedNote?: NoteName;
-  onRemoveChord?: (chordToRemove: ChordName) => void;
+  onRemove?: () => void;
   onHighlightNote?: (noteToSelect: NoteName | undefined) => void;
 }
 
@@ -16,7 +16,7 @@ const ChordCard = ({
   chord,
   isEditing,
   highlightedNote,
-  onRemoveChord,
+  onRemove,
   onHighlightNote,
 }: Props) => (
   <Card background="background-back" width="500px">
@@ -28,7 +28,7 @@ const ChordCard = ({
       <ChordDefinition
         chord={chord}
         isEditing={isEditing || false}
-        onRemoveChord={chord && onRemoveChord && (() => onRemoveChord(chord))}
+        onRemove={onRemove}
       />
     </CardHeader>
     <CardBody

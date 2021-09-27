@@ -7,10 +7,10 @@ import FormattedNotes from './FormattedNotes';
 export interface Props {
   chord: ChordName | undefined;
   isEditing: boolean;
-  onRemoveChord: (() => void) | undefined;
+  onRemove?: () => void;
 }
 
-const ChordDefinition = ({ chord, isEditing, onRemoveChord }: Props) => {
+const ChordDefinition = ({ chord, isEditing, onRemove }: Props) => {
   const chordNotes = chord ? getChordNotes(chord) : [];
 
   return (
@@ -20,7 +20,7 @@ const ChordDefinition = ({ chord, isEditing, onRemoveChord }: Props) => {
         background="background-front"
         border={{ side: 'right', color: 'background-contrast' }}
       >
-        <Heading level={2} size="small" color="accent-1" margin="none">
+        <Heading level={3} size="medium" color="accent-1" margin="none">
           <FormattedChord chord={chord} />
         </Heading>
       </Card>
@@ -39,7 +39,7 @@ const ChordDefinition = ({ chord, isEditing, onRemoveChord }: Props) => {
           <Button
             icon={<Trash />}
             a11yTitle={`Remove chord ${chord}`}
-            onClick={onRemoveChord}
+            onClick={onRemove}
           />
         </Collapsible>
       </Box>

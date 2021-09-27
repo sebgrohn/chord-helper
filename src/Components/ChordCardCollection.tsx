@@ -23,7 +23,7 @@ const ChordCardCollection = ({ chords, isEditing, onRemoveChord }: Props) => {
             chord={c}
             isEditing={isEditing}
             highlightedNote={highlightedNote}
-            onRemoveChord={onRemoveChord}
+            onRemove={() => onRemoveChord(c)}
             onHighlightNote={setHighlightedNote}
           />
         ))
