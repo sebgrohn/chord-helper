@@ -4,7 +4,7 @@ import { deepMerge } from 'grommet/utils';
 // https://www.shutterstock.com/blog/art-deco-graphic-design-techniques
 const goldColor = '#d1ad70'; // gold
 const aquamarineColor = '#87ccb0'; // aquamarine
-const turquoiseColor = '#91d4cf'; // light turquoise
+// const turquoiseColor = '#91d4cf'; // light turquoise
 const navyBlueColorColor = '#15173d'; // navy blue
 
 const theme = deepMerge(grommet, {

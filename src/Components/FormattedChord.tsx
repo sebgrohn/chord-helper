@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 import { ChordName } from '../Theory/chords';
 
-const chordNamePattern = /^\s*([A-G])(#)?(|maj6|dom7|maj7|aug|aug7|min|min6|min7)\s*$/;
+const chordNamePattern =
+  /^\s*([A-G])(#)?(|maj6|dom7|maj7|aug|aug7|min|min6|min7)\s*$/;
 
 const getNoteParts = (chord: ChordName) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, rootNoteName, hash, chordModifier] =
     chordNamePattern.exec(chord) ?? [];
   return [rootNoteName, hash, chordModifier];

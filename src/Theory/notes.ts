@@ -51,6 +51,7 @@ export const intervalNames: Record<number, string> = {
 const notePattern = /^\s*([A-G]#?)(\d)\s*$/;
 
 export const getNoteParts = (note: Note): [NoteName, OctaveNumber] => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, noteName, octave] = notePattern.exec(note) ?? [];
   return [noteName as NoteName, Number.parseInt(octave) as OctaveNumber];
 };

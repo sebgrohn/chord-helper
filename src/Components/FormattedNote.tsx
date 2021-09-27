@@ -3,6 +3,7 @@ import { Note, NoteName } from '../Theory/notes';
 const notePattern = /^\s*([A-G])(#)?(\d)?\s*$/;
 
 const getNoteParts = (note: Note | NoteName) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, noteName, hash, octave] = notePattern.exec(note) ?? [];
   return [noteName, hash, octave];
 };
