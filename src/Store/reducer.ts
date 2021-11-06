@@ -2,7 +2,7 @@ import type { Reducer } from 'react';
 import { StoredState } from '../Hooks/useStoringReducer';
 import type { Action } from './actions';
 import migrations from './migrations';
-import type { State } from './Types/State';
+import type { ChordSet, State } from './Types/State';
 
 export const initialState: State = {
   version: 2,
@@ -29,47 +29,64 @@ export const migrateState = (state: StoredState): State => {
 
 const reducer: Reducer<State, Action> = (state, action) => {
   switch (action.type) {
-    case 'addChord': {
-      const { chordSetIndex, chord } = action;
-      return !state.chordSets[chordSetIndex].selectedChords.find(
-        (c) => c === chord,
-      )
+    case 'setChordSetName':
+    case 'setChordSetDescription':
+    case 'addChordToSet':
+    case 'removeChordFromSet': {
+      const { chordSetIndex } = action;
+      const { chordSets } = state;
+      const newChordSet = chordSetReducer(
+        state.chordSets[chordSetIndex],
+        action,
+      );
+      return chordSets[chordSetIndex] &&
+        newChordSet !== chordSets[chordSetIndex]
         ? {
             ...state,
-            chordSets: [
-              ...state.chordSets.slice(0, chordSetIndex),
-              {
-                ...state.chordSets[chordSetIndex],
-                selectedChords: [
-                  ...state.chordSets[chordSetIndex].selectedChords,
-                  chord,
-                ],
-              },
-              ...state.chordSets.slice(chordSetIndex + 1),
-            ],
+            chordSets: chordSets.map((chordSet, i) =>
+              i === chordSetIndex ? newChordSet : chordSet,
+            ),
           }
         : state;
     }
 
-    case 'removeChord': {
-      const { chordSetIndex, chord } = action;
-      return state.chordSets[chordSetIndex].selectedChords.find(
-        (c) => c === chord,
-      )
+    default:
+      return state;
+  }
+};
+
+const chordSetReducer: Reducer<ChordSet, Action> = (state, action) => {
+  switch (action.type) {
+    case 'setChordSetName':
+      return {
+        ...state,
+        name: action.newName,
+      };
+
+    case 'setChordSetDescription':
+      return {
+        ...state,
+        description: action.newDescription,
+      };
+
+    case 'addChordToSet': {
+      const { chordToAdd } = action;
+      const { selectedChords } = state;
+      return !selectedChords.find((c) => c === chordToAdd)
         ? {
             ...state,
-            chordSets: [
-              ...state.chordSets.slice(0, chordSetIndex),
-              {
-                ...state.chordSets[chordSetIndex],
-                selectedChords: [
-                  ...state.chordSets[chordSetIndex].selectedChords.filter(
-                    (c) => c !== chord,
-                  ),
-                ],
-              },
-              ...state.chordSets.slice(chordSetIndex + 1),
-            ],
+            selectedChords: [...selectedChords, chordToAdd],
+          }
+        : state;
+    }
+
+    case 'removeChordFromSet': {
+      const { chordToRemove } = action;
+      const { selectedChords } = state;
+      return selectedChords.find((c) => c === chordToRemove)
+        ? {
+            ...state,
+            selectedChords: selectedChords.filter((c) => c !== chordToRemove),
           }
         : state;
     }

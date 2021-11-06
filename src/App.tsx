@@ -21,15 +21,27 @@ function App() {
   const chordSets = selectors.getChordSets(state);
   const availableChords = selectors.getAvailableChords();
 
-  const handleAddChord = useCallback(
-    (chordSetIndex, chordToAdd) =>
-      dispatch(actions.addChord(chordSetIndex, chordToAdd)),
+  const handleSetChordSetName = useCallback(
+    (chordSetIndex, newName) =>
+      dispatch(actions.setChordSetName(chordSetIndex, newName)),
     [dispatch],
   );
 
-  const handleRemoveChord = useCallback(
+  const handleSetChordSetDescription = useCallback(
+    (chordSetIndex, newDescription) =>
+      dispatch(actions.setChordSetDescription(chordSetIndex, newDescription)),
+    [dispatch],
+  );
+
+  const handleAddChordToSet = useCallback(
+    (chordSetIndex, chordToAdd) =>
+      dispatch(actions.addChordToSet(chordSetIndex, chordToAdd)),
+    [dispatch],
+  );
+
+  const handleRemoveChordFromSet = useCallback(
     (chordSetIndex, chordToRemove) =>
-      dispatch(actions.removeChord(chordSetIndex, chordToRemove)),
+      dispatch(actions.removeChordFromSet(chordSetIndex, chordToRemove)),
     [dispatch],
   );
 
@@ -47,8 +59,10 @@ function App() {
         <ChordSetCollection
           chordSets={chordSets}
           availableChords={availableChords}
-          onAddChord={handleAddChord}
-          onRemoveChord={handleRemoveChord}
+          onSetName={handleSetChordSetName}
+          onSetDescription={handleSetChordSetDescription}
+          onAddChord={handleAddChordToSet}
+          onRemoveChord={handleRemoveChordFromSet}
         />
       </Main>
       <Footer

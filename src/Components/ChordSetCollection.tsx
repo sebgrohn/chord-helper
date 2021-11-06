@@ -6,6 +6,8 @@ import ChordSet from './ChordSet';
 export interface Props {
   chordSets: ChordSetType[];
   availableChords: ChordName[];
+  onSetName: (chordSetIndex: number, newName: string) => void;
+  onSetDescription: (chordSetIndex: number, newDescription: string) => void;
   onAddChord: (chordSetIndex: number, chordToAdd: ChordName) => void;
   onRemoveChord: (chordSetIndex: number, chordToRemove: ChordName) => void;
 }
@@ -13,6 +15,8 @@ export interface Props {
 const ChordSetCollection = ({
   chordSets,
   availableChords,
+  onSetName,
+  onSetDescription,
   onAddChord,
   onRemoveChord,
 }: Props) => (
@@ -24,6 +28,10 @@ const ChordSetCollection = ({
         description={description}
         selectedChords={selectedChords}
         availableChords={availableChords}
+        onSetName={(newName) => onSetName(i, newName)}
+        onSetDescription={(newDescription) =>
+          onSetDescription(i, newDescription)
+        }
         onAddChord={(chordToAdd) => onAddChord(i, chordToAdd)}
         onRemoveChord={(chordToRemove) => onRemoveChord(i, chordToRemove)}
       />

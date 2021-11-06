@@ -1,33 +1,67 @@
 import type { ChordName } from '../Theory/chords';
 
-export interface AddChordAction {
-  type: 'addChord';
+export interface SetChordSetNameAction {
+  type: 'setChordSetName';
   chordSetIndex: number;
-  chord: ChordName;
+  newName: string;
 }
 
-export const addChord = (
+export const setChordSetName = (
   chordSetIndex: number,
-  chord: ChordName,
-): AddChordAction => ({
-  type: 'addChord',
+  newName: string,
+): SetChordSetNameAction => ({
+  type: 'setChordSetName',
   chordSetIndex,
-  chord,
+  newName,
 });
 
-export interface RemoveChordAction {
-  type: 'removeChord';
+export interface SetChordSetDescriptionAction {
+  type: 'setChordSetDescription';
   chordSetIndex: number;
-  chord: ChordName;
+  newDescription: string;
 }
 
-export const removeChord = (
+export const setChordSetDescription = (
   chordSetIndex: number,
-  chord: ChordName,
-): RemoveChordAction => ({
-  type: 'removeChord',
+  newDescription: string,
+): SetChordSetDescriptionAction => ({
+  type: 'setChordSetDescription',
   chordSetIndex,
-  chord,
+  newDescription,
 });
 
-export type Action = AddChordAction | RemoveChordAction;
+export interface AddChordToSetAction {
+  type: 'addChordToSet';
+  chordSetIndex: number;
+  chordToAdd: ChordName;
+}
+
+export const addChordToSet = (
+  chordSetIndex: number,
+  chordToAdd: ChordName,
+): AddChordToSetAction => ({
+  type: 'addChordToSet',
+  chordSetIndex,
+  chordToAdd,
+});
+
+export interface RemoveChordFromSetAction {
+  type: 'removeChordFromSet';
+  chordSetIndex: number;
+  chordToRemove: ChordName;
+}
+
+export const removeChordFromSet = (
+  chordSetIndex: number,
+  chordToRemove: ChordName,
+): RemoveChordFromSetAction => ({
+  type: 'removeChordFromSet',
+  chordSetIndex,
+  chordToRemove,
+});
+
+export type Action =
+  | SetChordSetNameAction
+  | SetChordSetDescriptionAction
+  | AddChordToSetAction
+  | RemoveChordFromSetAction;
