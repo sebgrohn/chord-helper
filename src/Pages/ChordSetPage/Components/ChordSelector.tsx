@@ -1,7 +1,7 @@
 import { Box, Button, Collapsible, Select } from 'grommet';
 import { Add, Checkmark, Edit } from 'grommet-icons';
 import { useCallback, useMemo, useState } from 'react';
-import { ChordName } from '../Theory/chords';
+import { ChordName } from '../../../Theory/chords';
 
 export interface Props {
   chords: ChordName[];

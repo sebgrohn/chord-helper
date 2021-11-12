@@ -1,6 +1,6 @@
 import { Box, Heading, Text, TextInput } from 'grommet';
 import { useState } from 'react';
-import { ChordName } from '../Theory/chords';
+import { ChordName } from '../../../Theory/chords';
 import ChordCardCollection from './ChordCardCollection';
 import ChordSelector from './ChordSelector';
 
@@ -15,7 +15,7 @@ export interface Props {
   onRemoveChord: (chordToRemove: ChordName) => void;
 }
 
-const ChordSet = ({
+const ChordSetPage = ({
   name,
   description,
   selectedChords,
@@ -76,4 +76,4 @@ const ChordSet = ({
   );
 };
 
-export default ChordSet;
+export default ChordSetPage;

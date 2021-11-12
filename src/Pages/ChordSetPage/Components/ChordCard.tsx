@@ -1,6 +1,6 @@
 import { Card, CardBody, CardHeader } from 'grommet';
-import { ChordName } from '../Theory/chords';
-import { NoteName } from '../Theory/notes';
+import { ChordName } from '../../../Theory/chords';
+import { NoteName } from '../../../Theory/notes';
 import ChordDefinition from './ChordDefinition';
 import StringChord from './StringChord';
 

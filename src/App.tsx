@@ -1,11 +1,13 @@
 import { Footer, Grommet, Header, Heading, Main, Text } from 'grommet';
-import React, { useCallback } from 'react';
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import ChordSetCollection from './Components/ChordSetCollection';
+import Link from './Components/Link';
 import useStoringReducer from './Hooks/useStoringReducer';
-import * as actions from './Store/actions';
+import ChordSetPage from './Pages/ChordSetPage';
+import ChordSetsPage from './Pages/ChordSetsPage';
+import NotFoundPage from './Pages/NotFoundPage';
 import reducer, { initialState, migrateState } from './Store/reducer';
-import * as selectors from './Store/selectors';
 import theme from './theme';
 
 const applicationStateStorageKey = 'applicationState';
@@ -18,33 +20,6 @@ function App() {
     initialState,
   );
 
-  const chordSets = selectors.getChordSets(state);
-  const availableChords = selectors.getAvailableChords();
-
-  const handleSetChordSetName = useCallback(
-    (chordSetIndex, newName) =>
-      dispatch(actions.setChordSetName(chordSetIndex, newName)),
-    [dispatch],
-  );
-
-  const handleSetChordSetDescription = useCallback(
-    (chordSetIndex, newDescription) =>
-      dispatch(actions.setChordSetDescription(chordSetIndex, newDescription)),
-    [dispatch],
-  );
-
-  const handleAddChordToSet = useCallback(
-    (chordSetIndex, chordToAdd) =>
-      dispatch(actions.addChordToSet(chordSetIndex, chordToAdd)),
-    [dispatch],
-  );
-
-  const handleRemoveChordFromSet = useCallback(
-    (chordSetIndex, chordToRemove) =>
-      dispatch(actions.removeChordFromSet(chordSetIndex, chordToRemove)),
-    [dispatch],
-  );
-
   return (
     <Grommet full theme={theme} themeMode="dark">
       <Header
@@ -52,18 +27,21 @@ function App() {
         background="brand"
       >
         <Heading size="small" margin="none">
-          Chord Helper
+          <Link to="/">Chord Helper</Link>
         </Heading>
       </Header>
-      <Main pad="large" gap="medium">
-        <ChordSetCollection
-          chordSets={chordSets}
-          availableChords={availableChords}
-          onSetName={handleSetChordSetName}
-          onSetDescription={handleSetChordSetDescription}
-          onAddChord={handleAddChordToSet}
-          onRemoveChord={handleRemoveChordFromSet}
-        />
+      <Main pad="large">
+        <Routes>
+          <Route
+            path="/"
+            element={<ChordSetsPage state={state} dispatch={dispatch} />}
+          ></Route>
+          <Route
+            path="chord-sets/:chordSetId"
+            element={<ChordSetPage state={state} dispatch={dispatch} />}
+          />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
       </Main>
       <Footer
         pad={{ vertical: 'small', horizontal: 'large' }}

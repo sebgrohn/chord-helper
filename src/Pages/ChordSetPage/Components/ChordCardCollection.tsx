@@ -1,7 +1,7 @@
 import { Grid } from 'grommet';
 import { useState } from 'react';
-import { ChordName } from '../Theory/chords';
-import { NoteName } from '../Theory/notes';
+import { ChordName } from '../../../Theory/chords';
+import { NoteName } from '../../../Theory/notes';
 import ChordCard from './ChordCard';
 import EmptyChordCard from './EmptyChordCard';
 

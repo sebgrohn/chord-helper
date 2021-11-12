@@ -31,13 +31,17 @@ const theme = deepMerge(grommet, {
       'accent-1': goldColor,
 
       border: {
-        dark: '#d1ad7080', // semitransparent gold
-        // light: '#d1ad7080',
+        dark: `${goldColor}80`,
+      },
+      'border-semi': {
+        dark: `${goldColor}40`,
       },
 
-      'border-semi': {
-        dark: '#d1ad7040', // semi-semitransparent gold
-        // light: '#d1ad7080',
+      'border-brand': {
+        dark: `${aquamarineColor}80`,
+      },
+      'border-brand-semi': {
+        dark: `${aquamarineColor}40`,
       },
     },
 
