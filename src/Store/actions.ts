@@ -1,5 +1,25 @@
 import type { ChordName } from '../Theory/chords';
 
+export interface AddChordSetAction {
+  type: 'addChordSet';
+}
+
+export const addChordSet = (): AddChordSetAction => ({
+  type: 'addChordSet',
+});
+
+export interface RemoveChordSetAction {
+  type: 'removeChordSet';
+  chordSetToRemoveIndex: number;
+}
+
+export const removeChordSet = (
+  chordSetToRemoveIndex: number,
+): RemoveChordSetAction => ({
+  type: 'removeChordSet',
+  chordSetToRemoveIndex,
+});
+
 export interface SetChordSetNameAction {
   type: 'setChordSetName';
   chordSetIndex: number;
@@ -61,6 +81,8 @@ export const removeChordFromSet = (
 });
 
 export type Action =
+  | AddChordSetAction
+  | RemoveChordSetAction
   | SetChordSetNameAction
   | SetChordSetDescriptionAction
   | AddChordToSetAction

@@ -29,6 +29,30 @@ export const migrateState = (state: StoredState): State => {
 
 const reducer: Reducer<State, Action> = (state, action) => {
   switch (action.type) {
+    case 'addChordSet':
+      return {
+        ...state,
+        chordSets: [
+          ...state.chordSets,
+          {
+            name: '',
+            description: '',
+            selectedChords: [],
+          },
+        ],
+      };
+
+    case 'removeChordSet': {
+      const { chordSetToRemoveIndex } = action;
+      const { chordSets } = state;
+      return chordSets[chordSetToRemoveIndex]
+        ? {
+            ...state,
+            chordSets: chordSets.filter((_, i) => i !== chordSetToRemoveIndex),
+          }
+        : state;
+    }
+
     case 'setChordSetName':
     case 'setChordSetDescription':
     case 'addChordToSet':
