@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/chord-helper/static/css/main.c062315b.chunk.css",
-    "main.js": "/chord-helper/static/js/main.f0e74ddb.chunk.js",
-    "main.js.map": "/chord-helper/static/js/main.f0e74ddb.chunk.js.map",
+    "main.js": "/chord-helper/static/js/main.12d38b19.chunk.js",
+    "main.js.map": "/chord-helper/static/js/main.12d38b19.chunk.js.map",
     "runtime-main.js": "/chord-helper/static/js/runtime-main.8309211c.js",
     "runtime-main.js.map": "/chord-helper/static/js/runtime-main.8309211c.js.map",
-    "static/js/2.a49b242e.chunk.js": "/chord-helper/static/js/2.a49b242e.chunk.js",
-    "static/js/2.a49b242e.chunk.js.map": "/chord-helper/static/js/2.a49b242e.chunk.js.map",
+    "static/js/2.4310763e.chunk.js": "/chord-helper/static/js/2.4310763e.chunk.js",
+    "static/js/2.4310763e.chunk.js.map": "/chord-helper/static/js/2.4310763e.chunk.js.map",
     "static/js/3.7cdef031.chunk.js": "/chord-helper/static/js/3.7cdef031.chunk.js",
     "static/js/3.7cdef031.chunk.js.map": "/chord-helper/static/js/3.7cdef031.chunk.js.map",
     "index.html": "/chord-helper/index.html",
     "static/css/main.c062315b.chunk.css.map": "/chord-helper/static/css/main.c062315b.chunk.css.map",
-    "static/js/2.a49b242e.chunk.js.LICENSE.txt": "/chord-helper/static/js/2.a49b242e.chunk.js.LICENSE.txt"
+    "static/js/2.4310763e.chunk.js.LICENSE.txt": "/chord-helper/static/js/2.4310763e.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.8309211c.js",
-    "static/js/2.a49b242e.chunk.js",
+    "static/js/2.4310763e.chunk.js",
     "static/css/main.c062315b.chunk.css",
-    "static/js/main.f0e74ddb.chunk.js"
+    "static/js/main.12d38b19.chunk.js"
   ]
 }
