@@ -1,4 +1,4 @@
-import { Box, Heading, Text, TextInput } from 'grommet';
+import { Box, Heading, Keyboard, Text, TextInput } from 'grommet';
 import { useState } from 'react';
 import { ChordName } from '../../../Theory/chords';
 import ChordCardCollection from './ChordCardCollection';
@@ -32,47 +32,51 @@ const ChordSetPage = ({
   );
 
   return (
-    <Box gap="medium">
-      <Box direction="row" align="start" gap="small">
-        <Box width="100%">
-          <Heading level={2} size="small" margin={{ vertical: 'small' }}>
-            {isEditing ? (
-              <TextInput
-                plain="full"
-                value={name}
-                placeholder="Enter name"
-                onChange={(event) => onSetName(event.target.value)}
-              />
-            ) : (
-              name || <em>Unnamed chord set</em>
-            )}
-          </Heading>
-          <Text>
-            {isEditing ? (
-              <TextInput
-                plain="full"
-                value={description}
-                placeholder="Enter description"
-                onChange={(event) => onSetDescription(event.target.value)}
-              />
-            ) : (
-              description || <em>No description</em>
-            )}
-          </Text>
+    <Keyboard onEsc={() => setIsEditing(false)}>
+      <Box gap="medium">
+        <Box direction="row" align="start" gap="small">
+          <Keyboard onEnter={() => setIsEditing(false)}>
+            <Box width="100%">
+              <Heading level={2} size="small" margin={{ vertical: 'small' }}>
+                {isEditing ? (
+                  <TextInput
+                    plain="full"
+                    value={name}
+                    placeholder="Enter name"
+                    onChange={(event) => onSetName(event.target.value)}
+                  />
+                ) : (
+                  name || <em>Unnamed chord set</em>
+                )}
+              </Heading>
+              <Text>
+                {isEditing ? (
+                  <TextInput
+                    plain="full"
+                    value={description}
+                    placeholder="Enter description"
+                    onChange={(event) => onSetDescription(event.target.value)}
+                  />
+                ) : (
+                  description || <em>No description</em>
+                )}
+              </Text>
+            </Box>
+          </Keyboard>
+          <ChordSelector
+            chords={filteredChords}
+            isEditing={isEditing}
+            onAdd={onAddChord}
+            onIsEditingChange={setIsEditing}
+          />
         </Box>
-        <ChordSelector
-          chords={filteredChords}
+        <ChordCardCollection
+          chords={selectedChords}
           isEditing={isEditing}
-          onAdd={onAddChord}
-          onIsEditingChange={setIsEditing}
+          onRemoveChord={onRemoveChord}
         />
       </Box>
-      <ChordCardCollection
-        chords={selectedChords}
-        isEditing={isEditing}
-        onRemoveChord={onRemoveChord}
-      />
-    </Box>
+    </Keyboard>
   );
 };
 
