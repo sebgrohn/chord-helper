@@ -59,9 +59,6 @@ export const getNoteParts = (note: Note): [NoteName, OctaveNumber] => {
 const getNoteFromParts = (noteName: NoteName, octave: OctaveNumber): Note =>
   `${noteName}${octave}` as Note;
 
-export const isValidNote = (noteString: string): noteString is Note =>
-  notePattern.test(noteString);
-
 export const transposeNoteName = (
   noteName: NoteName,
   semitoneDistance: number,

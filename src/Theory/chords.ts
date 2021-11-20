@@ -63,10 +63,6 @@ const getChordNameFromParts = (
   chordModifier: ChordModifier,
 ): ChordName => `${rootNoteName}${chordModifier}` as ChordName;
 
-export const isValidChordName = (
-  chordNameString: string,
-): chordNameString is ChordName => chordNamePattern.test(chordNameString);
-
 export const getChordNotes = (chordName: ChordName): NoteName[] => {
   const [rootNoteName, chordModifier] = getChordNameParts(chordName);
   const chordDefinition = chordDefinitions[chordModifier];
