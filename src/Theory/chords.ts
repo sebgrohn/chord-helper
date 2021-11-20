@@ -9,7 +9,9 @@ export type ChordModifier =
   | 'aug7'
   | 'min'
   | 'min6'
-  | 'min7'; // ...more
+  | 'min7'
+  | 'dim'
+  | 'dim7'; // ...more
 
 export type ChordName = `${NoteName}${ChordModifier}`;
 
@@ -41,6 +43,9 @@ const chordDefinitions: Record<ChordModifier, ChordDefinition> = {
   min: [0, 3, 7], // minor
   min6: [0, 3, 7, 9], // minor 6th
   min7: [0, 3, 7, 10], // minor 7th
+
+  dim: [0, 3, 6], // diminished
+  dim7: [0, 3, 6, 9], // diminished 7th
 };
 
 const chordNamePattern =
