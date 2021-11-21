@@ -1,3 +1,5 @@
+import type { ChordName } from '../../Theory/chords';
+
 export interface StateVersion0 {
   selectedChords: ChordName[];
 }
