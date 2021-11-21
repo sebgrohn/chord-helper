@@ -1,8 +1,9 @@
-import { Box, Heading, Keyboard, Text, TextInput } from 'grommet';
+import { Box, Keyboard } from 'grommet';
 import { useState } from 'react';
 import { ChordName } from '../../../Theory/chords';
 import ChordCardCollection from './ChordCardCollection';
 import ChordSelector from './ChordSelector';
+import DetailsBox from './DetailsBox';
 
 export interface Props {
   name: string;
@@ -35,34 +36,14 @@ const ChordSetPage = ({
     <Keyboard onEsc={() => setIsEditing(false)}>
       <Box gap="medium">
         <Box direction="row" align="start" gap="small">
-          <Keyboard onEnter={() => setIsEditing(false)}>
-            <Box width="100%">
-              <Heading level={2} size="small" margin={{ vertical: 'small' }}>
-                {isEditing ? (
-                  <TextInput
-                    plain="full"
-                    value={name}
-                    placeholder="Enter name"
-                    onChange={(event) => onSetName(event.target.value)}
-                  />
-                ) : (
-                  name || <em>Unnamed chord set</em>
-                )}
-              </Heading>
-              <Text>
-                {isEditing ? (
-                  <TextInput
-                    plain="full"
-                    value={description}
-                    placeholder="Enter description"
-                    onChange={(event) => onSetDescription(event.target.value)}
-                  />
-                ) : (
-                  description || <em>No description</em>
-                )}
-              </Text>
-            </Box>
-          </Keyboard>
+          <DetailsBox
+            name={name}
+            description={description}
+            isEditing={isEditing}
+            onSetName={onSetName}
+            onSetDescription={onSetDescription}
+            onIsEditingChange={setIsEditing}
+          />
           <ChordSelector
             chords={filteredChords}
             isEditing={isEditing}
