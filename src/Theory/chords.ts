@@ -19,7 +19,7 @@ export type ChordName = `${NoteName}${ChordModifier}`;
 export type ChordDefinition = Interval[];
 
 // https://en.wikipedia.org/wiki/Chord_(music)#Examples
-const chordDefinitions: Record<ChordModifier, ChordDefinition> = {
+export const chordDefinitions: Record<ChordModifier, ChordDefinition> = {
   '': [0, 4, 7], // major
   maj6: [0, 4, 7, 9], // major 6th
   dom7: [0, 4, 7, 10], // dominant 7th
@@ -46,7 +46,7 @@ const getChordNameParts = (chordName: ChordName): [NoteName, ChordModifier] => {
   return [rootNoteName as NoteName, chordModifier as ChordModifier];
 };
 
-const getChordNameFromParts = (
+export const getChordNameFromParts = (
   rootNoteName: NoteName,
   chordModifier: ChordModifier,
 ): ChordName => `${rootNoteName}${chordModifier}` as ChordName;
