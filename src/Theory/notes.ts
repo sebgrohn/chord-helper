@@ -12,9 +12,9 @@ export type NoteName =
   | 'A#'
   | 'B';
 
-export type OctaveNumber = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+export type Octave = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
-export type Note = `${NoteName}${OctaveNumber}`;
+export type Note = `${NoteName}${Octave}`;
 
 export const noteNames: NoteName[] = [
   'C',
@@ -50,13 +50,13 @@ export const intervalNames: Record<number, string> = {
 
 const notePattern = /^\s*([A-G]#?)(\d)\s*$/;
 
-export const getNoteParts = (note: Note): [NoteName, OctaveNumber] => {
+export const getNoteParts = (note: Note): [NoteName, Octave] => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, noteName, octave] = notePattern.exec(note) ?? [];
-  return [noteName as NoteName, Number.parseInt(octave) as OctaveNumber];
+  return [noteName as NoteName, Number.parseInt(octave) as Octave];
 };
 
-const getNoteFromParts = (noteName: NoteName, octave: OctaveNumber): Note =>
+const getNoteFromParts = (noteName: NoteName, octave: Octave): Note =>
   `${noteName}${octave}` as Note;
 
 export const transposeNoteName = (
@@ -75,6 +75,6 @@ export const transposeNote = (note: Note, semitoneDistance: number) => {
     Math.sign(semitoneDistance) * Math.floor(Math.abs(semitoneDistance) / 12);
   return getNoteFromParts(
     transposedNoteName,
-    (octave + octaveDistance) as OctaveNumber,
+    (octave + octaveDistance) as Octave,
   );
 };
