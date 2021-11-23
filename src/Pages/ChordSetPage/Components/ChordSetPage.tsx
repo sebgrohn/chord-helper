@@ -1,9 +1,10 @@
 import { Box, Keyboard } from 'grommet';
 import { useState } from 'react';
-import { ChordName } from '../../../Theory/chords';
+import type { ChordName } from '../../../Theory/chords';
 import ChordCardCollection from './ChordCardCollection';
 import ChordSelector from './ChordSelector';
 import DetailsBox from './DetailsBox';
+import EditButton from './EditButton';
 
 export interface Props {
   name: string;
@@ -44,12 +45,23 @@ const ChordSetPage = ({
             onSetDescription={onSetDescription}
             onIsEditingChange={setIsEditing}
           />
-          <ChordSelector
-            chords={filteredChords}
-            isEditing={isEditing}
-            onAdd={onAddChord}
-            onIsEditingChange={setIsEditing}
-          />
+          <Box
+            direction="row"
+            justify="end"
+            align="center"
+            gap="small"
+            width="100%"
+          >
+            <ChordSelector
+              chords={filteredChords}
+              isEditing={isEditing}
+              onAdd={onAddChord}
+            />
+            <EditButton
+              isEditing={isEditing}
+              onIsEditingChange={setIsEditing}
+            />
+          </Box>
         </Box>
         <ChordCardCollection
           chords={selectedChords}
