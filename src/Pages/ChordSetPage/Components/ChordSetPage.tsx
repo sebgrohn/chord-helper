@@ -1,18 +1,23 @@
 import { Box, Keyboard } from 'grommet';
 import { useState } from 'react';
 import type { ChordName } from '../../../Theory/chords';
+import type { KeyName } from '../../../Theory/keys';
 import ChordCardCollection from './ChordCardCollection';
 import ChordSelector from './ChordSelector';
 import DetailsBox from './DetailsBox';
 import EditButton from './EditButton';
+import KeySelector from './KeySelector';
 
 export interface Props {
   name: string;
   description: string;
+  selectedKey?: KeyName;
   selectedChords: ChordName[];
+  availableKeys: KeyName[];
   availableChords: ChordName[];
   onSetName: (newName: string) => void;
   onSetDescription: (newDescription: string) => void;
+  onSetKey: (newKey?: KeyName) => void;
   onAddChord: (chordToAdd: ChordName) => void;
   onRemoveChord: (chordToRemove: ChordName) => void;
 }
@@ -20,10 +25,13 @@ export interface Props {
 const ChordSetPage = ({
   name,
   description,
+  selectedKey,
   selectedChords,
+  availableKeys,
   availableChords,
   onSetName,
   onSetDescription,
+  onSetKey,
   onAddChord,
   onRemoveChord,
 }: Props) => {
@@ -40,6 +48,7 @@ const ChordSetPage = ({
           <DetailsBox
             name={name}
             description={description}
+            selectedKey={selectedKey}
             isEditing={isEditing}
             onSetName={onSetName}
             onSetDescription={onSetDescription}
@@ -52,6 +61,12 @@ const ChordSetPage = ({
             gap="small"
             width="100%"
           >
+            <KeySelector
+              selectedKey={selectedKey}
+              keys={availableKeys}
+              isEditing={isEditing}
+              onChange={onSetKey}
+            />
             <ChordSelector
               chords={filteredChords}
               isEditing={isEditing}

@@ -1,4 +1,5 @@
 import type { ChordName } from '../Theory/chords';
+import type { KeyName } from '../Theory/keys';
 
 export interface AddChordSetAction {
   type: 'addChordSet';
@@ -50,6 +51,21 @@ export const setChordSetDescription = (
   newDescription,
 });
 
+export interface SetChordSetKeyAction {
+  type: 'setChordSetKey';
+  chordSetIndex: number;
+  newKey?: KeyName;
+}
+
+export const setChordSetKey = (
+  chordSetIndex: number,
+  newKey?: KeyName,
+): SetChordSetKeyAction => ({
+  type: 'setChordSetKey',
+  chordSetIndex,
+  newKey,
+});
+
 export interface AddChordToSetAction {
   type: 'addChordToSet';
   chordSetIndex: number;
@@ -85,5 +101,6 @@ export type Action =
   | RemoveChordSetAction
   | SetChordSetNameAction
   | SetChordSetDescriptionAction
+  | SetChordSetKeyAction
   | AddChordToSetAction
   | RemoveChordFromSetAction;

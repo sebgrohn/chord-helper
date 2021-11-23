@@ -1,4 +1,5 @@
 import type { ChordName } from '../../Theory/chords';
+import type { KeyName } from '../../Theory/keys';
 
 export interface StateVersion0 {
   selectedChords: ChordName[];
@@ -12,6 +13,7 @@ export interface StateVersion1 {
 export interface ChordSet {
   name: string;
   description: string;
+  selectedKey?: KeyName;
   selectedChords: ChordName[];
 }
 

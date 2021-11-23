@@ -55,6 +55,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
 
     case 'setChordSetName':
     case 'setChordSetDescription':
+    case 'setChordSetKey':
     case 'addChordToSet':
     case 'removeChordFromSet': {
       const { chordSetIndex } = action;
@@ -91,6 +92,12 @@ const chordSetReducer: Reducer<ChordSet, Action> = (state, action) => {
       return {
         ...state,
         description: action.newDescription,
+      };
+
+    case 'setChordSetKey':
+      return {
+        ...state,
+        selectedKey: action.newKey,
       };
 
     case 'addChordToSet': {
