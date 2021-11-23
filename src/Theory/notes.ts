@@ -32,21 +32,37 @@ export const noteNames: NoteName[] = [
 ];
 
 // https://en.wikipedia.org/wiki/Interval_(music)#Main_intervals
-export const intervalNames: Record<number, string> = {
-  0: 'perfect unison',
-  1: 'minor second',
-  2: 'major second',
-  3: 'minor third',
-  4: 'major third',
-  5: 'perfect fourth',
-  6: 'augmented fourth/diminished fifth',
-  7: 'perfect fifth',
-  8: 'minor sixth',
-  9: 'major sixth',
-  10: 'minor seventh',
-  11: 'major seventh',
-  12: 'perfect octave',
-};
+export type IntervalPerfectUnison = 0;
+export type IntervalMinorSecond = 1;
+export type IntervalMajorSecond = 2;
+export type IntervalMinorThird = 3;
+export type IntervalMajorThird = 4;
+export type IntervalPerfectFourth = 5;
+export type IntervalAugmentedFourth = 6;
+export type IntervalDiminishedFifth = 6;
+export type IntervalPerfectFifth = 7;
+export type IntervalMinorSixth = 8;
+export type IntervalMajorSixth = 9;
+export type IntervalMinorSeventh = 10;
+export type IntervalMajorSeventh = 11;
+export type IntervalPerfectOctave = 12;
+
+export type Interval =
+  | IntervalPerfectUnison
+  | IntervalMinorSecond
+  | IntervalMajorSecond
+  | IntervalMinorThird
+  | IntervalMajorThird
+  | IntervalPerfectFourth
+  | IntervalAugmentedFourth
+  | IntervalDiminishedFifth
+  | IntervalPerfectFifth
+  | IntervalMinorSixth
+  | IntervalMajorSixth
+  | IntervalMinorSeventh
+  | IntervalMajorSeventh;
+
+export type IntervalWithPerfectOctave = Interval | IntervalPerfectOctave;
 
 const notePattern = /^\s*([A-G]#?)(\d)\s*$/;
 
@@ -61,16 +77,19 @@ const getNoteFromParts = (noteName: NoteName, octave: Octave): Note =>
 
 export const transposeNoteName = (
   noteName: NoteName,
-  semitoneDistance: number,
+  interval: IntervalWithPerfectOctave,
 ) => {
   const index = noteNames.indexOf(noteName);
-  const transposedIndex = (index + semitoneDistance) % 12;
+  const transposedIndex = (index + interval) % 12;
   return noteNames[transposedIndex];
 };
 
 export const transposeNote = (note: Note, semitoneDistance: number) => {
   const [noteName, octave] = getNoteParts(note);
-  const transposedNoteName = transposeNoteName(noteName, semitoneDistance);
+  const transposedNoteName = transposeNoteName(
+    noteName,
+    (semitoneDistance % 12) as Interval,
+  );
   const octaveDistance =
     Math.sign(semitoneDistance) * Math.floor(Math.abs(semitoneDistance) / 12);
   return getNoteFromParts(

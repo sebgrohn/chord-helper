@@ -1,4 +1,5 @@
-import { NoteName, transposeNoteName } from './notes';
+import type { Interval, IntervalWithPerfectOctave, NoteName } from './notes';
+import { transposeNoteName } from './notes';
 
 export type ChordModifier =
   | ''
@@ -15,20 +16,7 @@ export type ChordModifier =
 
 export type ChordName = `${NoteName}${ChordModifier}`;
 
-export type ChordDefinition = (
-  | 0
-  | 1
-  | 2
-  | 3
-  | 4
-  | 5
-  | 6
-  | 7
-  | 8
-  | 9
-  | 10
-  | 11
-)[];
+export type ChordDefinition = Interval[];
 
 // https://en.wikipedia.org/wiki/Chord_(music)#Examples
 const chordDefinitions: Record<ChordModifier, ChordDefinition> = {
@@ -71,9 +59,9 @@ export const getChordNotes = (chordName: ChordName): NoteName[] => {
 
 export const transposeChord = (
   chordName: ChordName,
-  semitoneDistance: number,
+  interval: IntervalWithPerfectOctave,
 ): ChordName => {
   const [rootNoteName, chordModifier] = getChordNameParts(chordName);
-  const transposedNoteName = transposeNoteName(rootNoteName, semitoneDistance);
+  const transposedNoteName = transposeNoteName(rootNoteName, interval);
   return getChordNameFromParts(transposedNoteName, chordModifier);
 };
