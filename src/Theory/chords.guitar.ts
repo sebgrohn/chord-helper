@@ -59,7 +59,7 @@ export interface ChordDefinition {
   mutedStrings: StringId[];
 }
 
-const chords: Partial<Record<InstrumentName, ChordDefinition[]>> = {
+const chords: Record<InstrumentName, ChordDefinition[]> = {
   guitar: [
     {
       chord: 'C',
@@ -136,7 +136,11 @@ const chords: Partial<Record<InstrumentName, ChordDefinition[]>> = {
     },
     // { chord: 'Bmin', type: '', positions: [], mutedStrings: [] },
   ],
+  guitalele: [],
 };
+
+export const getAvailableChords = (instrumentName: InstrumentName) =>
+  chords[instrumentName].map((c) => c.chord);
 
 export const getStringPositionsParts = (stringPositions: StringPositions) =>
   stringPositions

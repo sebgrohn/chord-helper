@@ -14,7 +14,7 @@ export interface Props {
   selectedKey?: KeyName;
   selectedChords: ChordName[];
   availableKeys: KeyName[];
-  availableChords: ChordName[];
+  filteredChords: ChordName[];
   onSetName: (newName: string) => void;
   onSetDescription: (newDescription: string) => void;
   onSetKey: (newKey?: KeyName) => void;
@@ -28,7 +28,7 @@ const ChordSetPage = ({
   selectedKey,
   selectedChords,
   availableKeys,
-  availableChords,
+  filteredChords,
   onSetName,
   onSetDescription,
   onSetKey,
@@ -36,10 +36,6 @@ const ChordSetPage = ({
   onRemoveChord,
 }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
-
-  const filteredChords = availableChords.filter(
-    (c) => selectedChords.indexOf(c) < 0,
-  );
 
   return (
     <Keyboard onEsc={() => setIsEditing(false)}>

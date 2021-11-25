@@ -13,7 +13,7 @@ const ChordSetPageContainer = ({ state, dispatch }: PageProps) => {
 
   const allKeys = getAllKeys();
   const chordSet = selectors.getChordSet(chordSetIndex)(state);
-  const availableChords = selectors.getAvailableChords();
+  const filteredChords = selectors.getFilteredChords(chordSetIndex)(state);
 
   const handleSetName = useCallback(
     (newName) => dispatch(actions.setChordSetName(chordSetIndex, newName)),
@@ -42,7 +42,7 @@ const ChordSetPageContainer = ({ state, dispatch }: PageProps) => {
     [chordSetIndex, dispatch],
   );
 
-  if (!chordSet) {
+  if (!chordSet || !filteredChords) {
     return <NotFoundPage />;
   }
 
@@ -54,7 +54,7 @@ const ChordSetPageContainer = ({ state, dispatch }: PageProps) => {
       selectedKey={selectedKey}
       selectedChords={selectedChords}
       availableKeys={allKeys}
-      availableChords={availableChords}
+      filteredChords={filteredChords}
       onSetName={handleSetName}
       onSetDescription={handleSetDescription}
       onSetKey={handleSetKey}
