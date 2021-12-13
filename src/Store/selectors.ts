@@ -1,5 +1,5 @@
 import { getAvailableChords } from '../Theory/chords.guitar';
-import { getChordsInKey } from '../Theory/keys';
+import { getChordsInKey, getSuggestedKeysForChords } from '../Theory/keys';
 import type { ChordSet, State } from './Types/State';
 
 export const getChordSets = (state: State) => state.chordSets;
@@ -28,5 +28,20 @@ export const getFilteredChords = (chordSetId: number) => {
     return chordsInKey
       ? filteredChords.filter((c) => chordsInKey.includes(c))
       : filteredChords;
+  };
+};
+
+export const getSuggestedKeys = (chordSetId: number) => {
+  const chordSetSelector = getChordSet(chordSetId);
+
+  return (state: State) => {
+    const chordSet = chordSetSelector(state);
+    if (!chordSet) {
+      return undefined;
+    }
+
+    return getSuggestedKeysForChords(chordSet.selectedChords)
+      .map(({ key }) => key)
+      .slice(0, 3);
   };
 };

@@ -76,3 +76,24 @@ export const getChordsInKey = (keyName: KeyName): ChordName[] => {
     );
   });
 };
+
+export const getSuggestedKeysForChords = (
+  chords: ChordName[],
+): { key: KeyName; chordCount: number; weight: number }[] =>
+  getAllKeys()
+    .map((key) => {
+      const chordsInKey = getChordsInKey(key);
+
+      const chordCount = chords.filter((c) => chordsInKey.includes(c)).length;
+
+      const weight = chords
+        .map((c) => chordsInKey.indexOf(c))
+        .reduce(
+          (acc, pos) => (pos !== -1 ? acc + chordsInKey.length - pos : acc),
+          0,
+        );
+
+      return { key, chordCount, weight };
+    })
+    .filter(({ weight }) => weight > 0)
+    .sort((a, b) => b.weight - a.weight);

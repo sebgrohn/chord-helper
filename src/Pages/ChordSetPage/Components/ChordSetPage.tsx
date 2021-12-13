@@ -15,6 +15,7 @@ export interface Props {
   selectedChords: ChordName[];
   availableKeys: KeyName[];
   filteredChords: ChordName[];
+  suggestedKeys: KeyName[];
   onSetName: (newName: string) => void;
   onSetDescription: (newDescription: string) => void;
   onSetKey: (newKey?: KeyName) => void;
@@ -29,6 +30,7 @@ const ChordSetPage = ({
   selectedChords,
   availableKeys,
   filteredChords,
+  suggestedKeys,
   onSetName,
   onSetDescription,
   onSetKey,
@@ -60,6 +62,7 @@ const ChordSetPage = ({
             <KeySelector
               selectedKey={selectedKey}
               keys={availableKeys}
+              suggestedKeys={suggestedKeys}
               isEditing={isEditing}
               onChange={onSetKey}
             />
