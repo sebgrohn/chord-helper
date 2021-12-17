@@ -1,5 +1,5 @@
-import { ChordName } from './chords';
-import { InstrumentName } from './tunings.guitar';
+import type { ChordName } from './chords';
+import type { InstrumentName } from './tunings.guitar';
 
 export type ChordType = 'simple' | 'barre';
 

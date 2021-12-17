@@ -1,4 +1,4 @@
-import { Note, NoteName } from '../Theory/notes';
+import type { Note, NoteName } from '../Theory/notes';
 
 const notePattern = /^\s*([A-G])(#)?(\d)?\s*$/;
 

@@ -1,8 +1,8 @@
 import { Card, CardBody, CardHeader } from 'grommet';
 import { useRef } from 'react';
 import useSortable from '../../../Hooks/useSortable';
-import { ChordName } from '../../../Theory/chords';
-import { NoteName } from '../../../Theory/notes';
+import type { ChordName } from '../../../Theory/chords';
+import type { NoteName } from '../../../Theory/notes';
 import ChordDefinition from './ChordDefinition';
 import StringChord from './StringChord';
 

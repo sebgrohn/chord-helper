@@ -1,4 +1,5 @@
-import { getNoteParts, Note, noteNames } from './notes';
+import type { Note } from './notes';
+import { getNoteParts, noteNames } from './notes';
 
 export const getSemitoneDistance = (note1: Note, note2: Note): number => {
   const [noteName1, octave1] = getNoteParts(note1);

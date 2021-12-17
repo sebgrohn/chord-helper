@@ -2,7 +2,8 @@ import { Box, Button, Card, Collapsible, Heading, Text } from 'grommet';
 import { Trash } from 'grommet-icons';
 import FormattedChord from '../../../Components/FormattedChord';
 import FormattedNotes from '../../../Components/FormattedNotes';
-import { ChordName, getChordNotes } from '../../../Theory/chords';
+import type { ChordName } from '../../../Theory/chords';
+import { getChordNotes } from '../../../Theory/chords';
 
 export interface Props {
   chord: ChordName | undefined;

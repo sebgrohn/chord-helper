@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { Note, NoteName } from '../Theory/notes';
+import type { Note, NoteName } from '../Theory/notes';
 import FormattedNote from './FormattedNote';
 
 export interface Props {

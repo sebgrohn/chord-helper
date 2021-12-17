@@ -1,4 +1,5 @@
-import { Link as ReactRouterLink, LinkProps } from 'react-router-dom';
+import type { LinkProps } from 'react-router-dom';
+import { Link as ReactRouterLink } from 'react-router-dom';
 import styled from 'styled-components';
 
 const StyledLink = styled(ReactRouterLink)`

@@ -1,6 +1,6 @@
 import { Card, Text } from 'grommet';
 import FormattedChord from '../../../Components/FormattedChord';
-import { ChordName } from '../../../Theory/chords';
+import type { ChordName } from '../../../Theory/chords';
 
 export interface Props {
   chord?: ChordName;

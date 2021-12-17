@@ -2,14 +2,12 @@ import { Box, Grid, Text } from 'grommet';
 import { Close } from 'grommet-icons';
 import styled, { css } from 'styled-components';
 import FormattedNote from '../../../Components/FormattedNote';
-import { ChordName } from '../../../Theory/chords';
-import chords, {
-  FretId,
-  getStringPositionsParts,
-  StringId,
-} from '../../../Theory/chords.guitar';
+import type { ChordName } from '../../../Theory/chords';
+import type { FretId, StringId } from '../../../Theory/chords.guitar';
+import chords, { getStringPositionsParts } from '../../../Theory/chords.guitar';
 import { getNoteParts, NoteName, transposeNote } from '../../../Theory/notes';
-import tunings, { InstrumentName } from '../../../Theory/tunings.guitar';
+import type { InstrumentName } from '../../../Theory/tunings.guitar';
+import tunings from '../../../Theory/tunings.guitar';
 
 const PushedFingerBox = styled(Box)`
   width: 36px;

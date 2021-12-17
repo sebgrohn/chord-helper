@@ -1,11 +1,5 @@
-import {
-  Dispatch,
-  Reducer,
-  ReducerAction,
-  ReducerState,
-  useMemo,
-  useReducer,
-} from 'react';
+import type { Dispatch, Reducer, ReducerAction, ReducerState } from 'react';
+import { useMemo, useReducer } from 'react';
 
 export interface StoredState extends Record<any, any> {
   version?: number;

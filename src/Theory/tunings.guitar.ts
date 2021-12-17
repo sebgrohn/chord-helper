@@ -1,4 +1,4 @@
-import { Note } from './notes';
+import type { Note } from './notes';
 
 export type InstrumentName = 'guitar' | 'guitalele';
 
