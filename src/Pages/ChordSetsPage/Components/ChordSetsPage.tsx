@@ -30,6 +30,7 @@ const ChordSetsPage = ({
     </Box>
     <ChordSetCardCollection
       chordSets={chordSets}
+      onAddChordSet={onAddChordSet}
       onRemoveChordSet={onRemoveChordSet}
     />
   </Box>

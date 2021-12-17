@@ -1,5 +1,5 @@
 import { Box, Keyboard } from 'grommet';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { ChordName } from '../../../Theory/chords';
 import type { KeyName } from '../../../Theory/keys';
 import ChordCardCollection from './ChordCardCollection';
@@ -39,6 +39,8 @@ const ChordSetPage = ({
 }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
 
+  const chordSelectorFocusRef = useRef<(options?: FocusOptions) => void>();
+
   return (
     <Keyboard onEsc={() => setIsEditing(false)}>
       <Box gap="medium">
@@ -70,6 +72,7 @@ const ChordSetPage = ({
               chords={filteredChords}
               isEditing={isEditing}
               onAdd={onAddChord}
+              focusRef={chordSelectorFocusRef}
             />
             <EditButton
               isEditing={isEditing}
@@ -80,6 +83,10 @@ const ChordSetPage = ({
         <ChordCardCollection
           chords={selectedChords}
           isEditing={isEditing}
+          onAddChord={() => {
+            setIsEditing(true);
+            chordSelectorFocusRef.current?.();
+          }}
           onRemoveChord={onRemoveChord}
         />
       </Box>

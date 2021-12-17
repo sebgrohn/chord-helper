@@ -8,10 +8,16 @@ import EmptyChordCard from './EmptyChordCard';
 export interface Props {
   chords: ChordName[];
   isEditing: boolean;
+  onAddChord: () => void;
   onRemoveChord: (chordToRemove: ChordName) => void;
 }
 
-const ChordCardCollection = ({ chords, isEditing, onRemoveChord }: Props) => {
+const ChordCardCollection = ({
+  chords,
+  isEditing,
+  onAddChord,
+  onRemoveChord,
+}: Props) => {
   const [highlightedNote, setHighlightedNote] = useState<NoteName>();
 
   return (
@@ -28,7 +34,7 @@ const ChordCardCollection = ({ chords, isEditing, onRemoveChord }: Props) => {
           />
         ))
       ) : (
-        <EmptyChordCard />
+        <EmptyChordCard onAdd={onAddChord} />
       )}
     </Grid>
   );

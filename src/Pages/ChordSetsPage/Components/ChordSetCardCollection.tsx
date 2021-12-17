@@ -5,10 +5,15 @@ import EmptyChordSetCard from './EmptyChordSetCard';
 
 export interface Props {
   chordSets: ChordSetType[];
+  onAddChordSet: () => void;
   onRemoveChordSet: (chordSetToRemoveIndex: number) => void;
 }
 
-const ChordSetCardCollection = ({ chordSets, onRemoveChordSet }: Props) => (
+const ChordSetCardCollection = ({
+  chordSets,
+  onAddChordSet,
+  onRemoveChordSet,
+}: Props) => (
   <Grid columns="medium" gap="small" justify="center">
     {chordSets.length !== 0 ? (
       chordSets.map(({ name, description, selectedChords }, i) => (
@@ -22,7 +27,7 @@ const ChordSetCardCollection = ({ chordSets, onRemoveChordSet }: Props) => (
         />
       ))
     ) : (
-      <EmptyChordSetCard />
+      <EmptyChordSetCard onAdd={onAddChordSet} />
     )}
   </Grid>
 );
