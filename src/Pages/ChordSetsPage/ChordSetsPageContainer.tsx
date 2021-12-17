@@ -12,6 +12,12 @@ const ChordSetsPageContainer = ({ state, dispatch }: PageProps) => {
     [dispatch],
   );
 
+  const handleMoveChordSet = useCallback(
+    (chordSetToMoveIndex, targetChordSetIndex) =>
+      dispatch(actions.moveChordSet(chordSetToMoveIndex, targetChordSetIndex)),
+    [dispatch],
+  );
+
   const handleRemoveChordSet = useCallback(
     (chordSetToRemoveIndex) =>
       dispatch(actions.removeChordSet(chordSetToRemoveIndex)),
@@ -22,6 +28,7 @@ const ChordSetsPageContainer = ({ state, dispatch }: PageProps) => {
     <ChordSetsPage
       chordSets={chordSets}
       onAddChordSet={handleAddChordSet}
+      onMoveChordSet={handleMoveChordSet}
       onRemoveChordSet={handleRemoveChordSet}
     />
   );

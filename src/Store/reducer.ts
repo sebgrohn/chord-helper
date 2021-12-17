@@ -42,6 +42,26 @@ const reducer: Reducer<State, Action> = (state, action) => {
         ],
       };
 
+    case 'moveChordSet': {
+      const { chordSetToMoveIndex, targetChordSetIndex } = action;
+      const { chordSets } = state;
+      if (
+        Math.min(chordSetToMoveIndex, targetChordSetIndex) < 0 ||
+        Math.max(chordSetToMoveIndex, targetChordSetIndex) >= chordSets.length
+      ) {
+        return state;
+      }
+
+      const newChordSets = [...chordSets];
+      const [chordSetToMove] = newChordSets.splice(chordSetToMoveIndex, 1);
+      newChordSets.splice(targetChordSetIndex, 0, chordSetToMove);
+
+      return {
+        ...state,
+        chordSets: newChordSets,
+      };
+    }
+
     case 'removeChordSet': {
       const { chordSetToRemoveIndex } = action;
       const { chordSets } = state;

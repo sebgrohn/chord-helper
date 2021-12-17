@@ -6,12 +6,17 @@ import ChordSetCardCollection from './ChordSetCardCollection';
 export interface Props {
   chordSets: ChordSetType[];
   onAddChordSet: () => void;
+  onMoveChordSet: (
+    chordSetToMoveIndex: number,
+    targetChordSetIndex: number,
+  ) => void;
   onRemoveChordSet: (chordSetToRemoveIndex: number) => void;
 }
 
 const ChordSetsPage = ({
   chordSets,
   onAddChordSet,
+  onMoveChordSet,
   onRemoveChordSet,
 }: Props) => (
   <Box gap="medium">
@@ -31,6 +36,7 @@ const ChordSetsPage = ({
     <ChordSetCardCollection
       chordSets={chordSets}
       onAddChordSet={onAddChordSet}
+      onMoveChordSet={onMoveChordSet}
       onRemoveChordSet={onRemoveChordSet}
     />
   </Box>

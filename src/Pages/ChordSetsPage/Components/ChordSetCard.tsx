@@ -9,8 +9,9 @@ import {
   Keyboard,
 } from 'grommet';
 import { Checkmark, Close, Trash } from 'grommet-icons';
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import Link from '../../../Components/Link';
+import useSortable from '../../../Hooks/useSortable';
 import type { ChordName } from '../../../Theory/chords';
 import ChordBadge from './ChordBadge';
 
@@ -19,6 +20,7 @@ export interface Props {
   name?: string;
   description?: string;
   selectedChords?: ChordName[];
+  onMove?: (setToMoveHereIndex: number) => void;
   onRemove?: () => void;
 }
 
@@ -27,16 +29,34 @@ const ChordSetCard = ({
   name = '',
   description = '',
   selectedChords = [],
+  onMove,
   onRemove,
 }: Props) => {
+  const ref = useRef<HTMLDivElement>(null);
+
   const [isRemoving, setIsRemoving] = useState(false);
+
+  const handleMove = useCallback(
+    (setToMoveHereIndex: number) => {
+      setIsRemoving(false);
+      onMove?.(setToMoveHereIndex);
+    },
+    [onMove],
+  );
+
+  const isDragging = useSortable(chordSetIndex, !isRemoving, ref, handleMove);
 
   return (
     <Keyboard onEsc={() => setIsRemoving(false)}>
       <Card
+        ref={ref}
         background="background-back"
         fill
         border={{ color: 'border-brand' }}
+        style={{
+          cursor: !isRemoving ? 'grab' : 'default',
+          opacity: isDragging ? 0.3 : 1,
+        }}
       >
         <CardHeader
           pad="small"

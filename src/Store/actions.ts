@@ -9,6 +9,21 @@ export const addChordSet = (): AddChordSetAction => ({
   type: 'addChordSet',
 });
 
+export interface MoveChordSetAction {
+  type: 'moveChordSet';
+  chordSetToMoveIndex: number;
+  targetChordSetIndex: number;
+}
+
+export const moveChordSet = (
+  chordSetToMoveIndex: number,
+  targetChordSetIndex: number,
+): MoveChordSetAction => ({
+  type: 'moveChordSet',
+  chordSetToMoveIndex,
+  targetChordSetIndex,
+});
+
 export interface RemoveChordSetAction {
   type: 'removeChordSet';
   chordSetToRemoveIndex: number;
@@ -116,6 +131,7 @@ export const removeChordFromSet = (
 
 export type Action =
   | AddChordSetAction
+  | MoveChordSetAction
   | RemoveChordSetAction
   | SetChordSetNameAction
   | SetChordSetDescriptionAction
