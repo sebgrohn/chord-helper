@@ -20,6 +20,7 @@ export interface Props {
   onSetDescription: (newDescription: string) => void;
   onSetKey: (newKey?: KeyName) => void;
   onAddChord: (chordToAdd: ChordName) => void;
+  onMoveChord: (chordToMoveIndex: number, targetChordIndex: number) => void;
   onRemoveChord: (chordToRemove: ChordName) => void;
 }
 
@@ -35,6 +36,7 @@ const ChordSetPage = ({
   onSetDescription,
   onSetKey,
   onAddChord,
+  onMoveChord,
   onRemoveChord,
 }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -87,6 +89,7 @@ const ChordSetPage = ({
             setIsEditing(true);
             chordSelectorFocusRef.current?.();
           }}
+          onMoveChord={onMoveChord}
           onRemoveChord={onRemoveChord}
         />
       </Box>

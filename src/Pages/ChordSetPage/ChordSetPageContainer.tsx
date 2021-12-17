@@ -35,6 +35,7 @@ const ChordSetPageContainer = ({ state, dispatch }: PageProps) => {
   const handleSetDescription = chordSetDispatch(actions.setChordSetDescription);
   const handleSetKey = chordSetDispatch(actions.setChordSetKey);
   const handleAddChord = chordSetDispatch(actions.addChordToSet);
+  const handleMoveChord = chordSetDispatch(actions.moveChordInSet);
   const handleRemoveChord = chordSetDispatch(actions.removeChordFromSet);
 
   if (!chordSet || !filteredChords || !suggestedKeys) {
@@ -55,6 +56,7 @@ const ChordSetPageContainer = ({ state, dispatch }: PageProps) => {
       onSetDescription={handleSetDescription}
       onSetKey={handleSetKey}
       onAddChord={handleAddChord}
+      onMoveChord={handleMoveChord}
       onRemoveChord={handleRemoveChord}
     />
   );

@@ -57,6 +57,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
     case 'setChordSetDescription':
     case 'setChordSetKey':
     case 'addChordToSet':
+    case 'moveChordInSet':
     case 'removeChordFromSet': {
       const { chordSetIndex } = action;
       const { chordSets } = state;
@@ -109,6 +110,26 @@ const chordSetReducer: Reducer<ChordSet, Action> = (state, action) => {
             selectedChords: [...selectedChords, chordToAdd],
           }
         : state;
+    }
+
+    case 'moveChordInSet': {
+      const { chordToMoveIndex, targetChordIndex } = action;
+      const { selectedChords } = state;
+      if (
+        Math.min(chordToMoveIndex, targetChordIndex) < 0 ||
+        Math.max(chordToMoveIndex, targetChordIndex) >= selectedChords.length
+      ) {
+        return state;
+      }
+
+      const newSelectedChords = [...selectedChords];
+      const [chordToMove] = newSelectedChords.splice(chordToMoveIndex, 1);
+      newSelectedChords.splice(targetChordIndex, 0, chordToMove);
+
+      return {
+        ...state,
+        selectedChords: newSelectedChords,
+      };
     }
 
     case 'removeChordFromSet': {

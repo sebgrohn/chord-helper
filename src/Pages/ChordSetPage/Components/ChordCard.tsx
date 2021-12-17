@@ -1,4 +1,6 @@
 import { Card, CardBody, CardHeader } from 'grommet';
+import { useRef } from 'react';
+import useSortable from '../../../Hooks/useSortable';
 import { ChordName } from '../../../Theory/chords';
 import { NoteName } from '../../../Theory/notes';
 import ChordDefinition from './ChordDefinition';
@@ -6,43 +8,61 @@ import StringChord from './StringChord';
 
 export interface Props {
   chord?: ChordName;
+  index?: number;
   isEditing?: boolean;
   highlightedNote?: NoteName;
+  onMove?: (chordToMoveHereIndex: number) => void;
   onRemove?: () => void;
   onHighlightNote?: (noteToSelect: NoteName | undefined) => void;
 }
 
 const ChordCard = ({
   chord,
-  isEditing,
+  index = -1,
+  isEditing = false,
   highlightedNote,
+  onMove,
   onRemove,
   onHighlightNote,
-}: Props) => (
-  <Card background="background-back" width="500px">
-    <CardHeader
-      background="background-contrast"
-      border={{ side: 'bottom', color: 'background-contrast' }}
-      justify="between"
+}: Props) => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  const isDragging = useSortable(index, isEditing, ref, onMove);
+
+  return (
+    <Card
+      ref={ref}
+      background="background-back"
+      width="500px"
+      style={{
+        cursor: isEditing ? 'grab' : 'default',
+        opacity: isDragging ? 0.3 : 1,
+      }}
     >
-      <ChordDefinition
-        chord={chord}
-        isEditing={isEditing || false}
-        onRemove={onRemove}
-      />
-    </CardHeader>
-    <CardBody
-      pad="small"
-      border={{ side: 'top', color: 'background-contrast' }}
-    >
-      <StringChord
-        chord={chord}
-        disabled={isEditing || false}
-        highlightedNote={highlightedNote}
-        onHighlightNote={onHighlightNote}
-      />
-    </CardBody>
-  </Card>
-);
+      <CardHeader
+        background="background-contrast"
+        border={{ side: 'bottom', color: 'background-contrast' }}
+        justify="between"
+      >
+        <ChordDefinition
+          chord={chord}
+          isEditing={isEditing || false}
+          onRemove={onRemove}
+        />
+      </CardHeader>
+      <CardBody
+        pad="small"
+        border={{ side: 'top', color: 'background-contrast' }}
+      >
+        <StringChord
+          chord={chord}
+          disabled={isEditing || false}
+          highlightedNote={highlightedNote}
+          onHighlightNote={onHighlightNote}
+        />
+      </CardBody>
+    </Card>
+  );
+};
 
 export default ChordCard;

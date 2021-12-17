@@ -15,7 +15,7 @@
     - [ ] Visa detaljer om aktivt ackord (typ, ingående intervall)
 
 - [x] Ta bort valda ackord
-- [ ] Ändra ordning på ackord
+- [x] Ändra ordning på ackord
 
 - [x] Spara inställningar till local storage
 
