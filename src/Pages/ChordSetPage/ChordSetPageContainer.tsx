@@ -8,7 +8,7 @@ import NotFoundPage from '../NotFoundPage';
 import type { PageProps } from '../Types';
 import ChordSetPage from './Components/ChordSetPage';
 
-const useChordSetDispatch =
+const useDispatchAction =
   (dispatch: Dispatch<actions.Action>, chordSetIndex: number) =>
   <T extends Array<unknown>>(
     action: (chordSetIndex: number, ...args: [...T]) => actions.Action,
@@ -24,19 +24,19 @@ const ChordSetPageContainer = ({ state, dispatch }: PageProps) => {
   const { chordSetId } = useParams();
   const chordSetIndex = Number.parseInt(chordSetId!);
 
-  const chordSetDispatch = useChordSetDispatch(dispatch, chordSetIndex);
+  const dispatchAction = useDispatchAction(dispatch, chordSetIndex);
 
   const allKeys = getAllKeys();
   const chordSet = selectors.getChordSet(chordSetIndex)(state);
   const filteredChords = selectors.getFilteredChords(chordSetIndex)(state);
   const suggestedKeys = selectors.getSuggestedKeys(chordSetIndex)(state);
 
-  const handleSetName = chordSetDispatch(actions.setChordSetName);
-  const handleSetDescription = chordSetDispatch(actions.setChordSetDescription);
-  const handleSetKey = chordSetDispatch(actions.setChordSetKey);
-  const handleAddChord = chordSetDispatch(actions.addChordToSet);
-  const handleMoveChord = chordSetDispatch(actions.moveChordInSet);
-  const handleRemoveChord = chordSetDispatch(actions.removeChordFromSet);
+  const handleSetName = dispatchAction(actions.setChordSetName);
+  const handleSetDescription = dispatchAction(actions.setChordSetDescription);
+  const handleSetKey = dispatchAction(actions.setChordSetKey);
+  const handleAddChord = dispatchAction(actions.addChordToSet);
+  const handleMoveChord = dispatchAction(actions.moveChordInSet);
+  const handleRemoveChord = dispatchAction(actions.removeChordFromSet);
 
   if (!chordSet || !filteredChords || !suggestedKeys) {
     return <NotFoundPage />;
