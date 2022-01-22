@@ -21,12 +21,13 @@ const ChordSetCardCollection = ({
 }: Props) => (
   <Grid columns="medium" gap="small" justify="center">
     {chordSets.length !== 0 ? (
-      chordSets.map(({ name, description, selectedChords }, i) => (
+      chordSets.map(({ name, description, selectedKey, selectedChords }, i) => (
         <ChordSetCard
           key={i}
           chordSetIndex={i}
           name={name}
           description={description}
+          selectedKey={selectedKey}
           selectedChords={selectedChords}
           onMove={(setToMoveHereIndex) => onMoveChordSet(setToMoveHereIndex, i)}
           onRemove={() => onRemoveChordSet(i)}

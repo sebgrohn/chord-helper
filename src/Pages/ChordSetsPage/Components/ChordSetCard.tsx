@@ -7,18 +7,21 @@ import {
   Collapsible,
   Heading,
   Keyboard,
+  Text,
 } from 'grommet';
 import { Checkmark, Close, Trash } from 'grommet-icons';
 import { useCallback, useRef, useState } from 'react';
 import Link from '../../../Components/Link';
 import useSortable from '../../../Hooks/useSortable';
 import type { ChordName } from '../../../Theory/chords';
+import type { KeyName } from '../../../Theory/keys';
 import ChordBadge from './ChordBadge';
 
 export interface Props {
   chordSetIndex?: number;
   name?: string;
   description?: string;
+  selectedKey?: KeyName;
   selectedChords?: ChordName[];
   onMove?: (setToMoveHereIndex: number) => void;
   onRemove?: () => void;
@@ -28,6 +31,7 @@ const ChordSetCard = ({
   chordSetIndex = -1,
   name = '',
   description = '',
+  selectedKey,
   selectedChords = [],
   onMove,
   onRemove,
@@ -67,6 +71,7 @@ const ChordSetCard = ({
             <Heading level={3} size="small" margin="none" color="brand">
               {name || <em>Unnamed chord set</em>}
             </Heading>
+            {selectedKey && <Text size="large">in {selectedKey}</Text>}
           </Link>
           <Box direction="row" gap="small" justify="end" align="center">
             <Collapsible open={isRemoving} direction="horizontal">
@@ -108,7 +113,7 @@ const ChordSetCard = ({
           gap="small"
           border={{ side: 'top', color: 'background-contrast' }}
         >
-          {description || <em>No description</em>}
+          <Text>{description || <em>No description</em>}</Text>
           <Box direction="row" align="start" wrap gap="xsmall">
             {selectedChords.map((c) => (
               <ChordBadge key={c} chord={c} />
