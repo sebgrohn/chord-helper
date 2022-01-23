@@ -3,15 +3,12 @@ import FormattedChord from '../../../Components/FormattedChord';
 import type { ChordName } from '../../../Theory/chords';
 
 export interface Props {
-  chord?: ChordName;
+  chord: ChordName;
 }
 
 const ChordBadge = ({ chord }: Props) => (
-  <Card
-    background="background-front"
-    pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}
-  >
-    <Text size="medium" color="accent-1">
+  <Card background="background-front" width={{ min: '32px' }} pad="xxsmall">
+    <Text size="medium" textAlign="center" color="accent-1">
       <FormattedChord chord={chord} />
     </Text>
   </Card>

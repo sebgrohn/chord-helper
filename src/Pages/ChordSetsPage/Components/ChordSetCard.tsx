@@ -17,6 +17,7 @@ import useSortable from '../../../Hooks/useSortable';
 import type { ChordName } from '../../../Theory/chords';
 import type { KeyName } from '../../../Theory/keys';
 import ChordBadge from './ChordBadge';
+import EmptyChordBadge from './EmptyChordBadge';
 
 export interface Props {
   chordSetIndex?: number;
@@ -120,9 +121,11 @@ const ChordSetCard = ({
         >
           <Text>{description || <em>No description</em>}</Text>
           <Box direction="row" align="start" wrap gap="xsmall">
-            {selectedChords.map((c) => (
-              <ChordBadge key={c} chord={c} />
-            ))}
+            {selectedChords.length > 0 ? (
+              selectedChords.map((c) => <ChordBadge key={c} chord={c} />)
+            ) : (
+              <EmptyChordBadge />
+            )}
           </Box>
         </CardBody>
       </Card>
