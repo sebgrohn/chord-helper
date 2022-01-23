@@ -3,7 +3,7 @@ import type { ChordName } from '../Theory/chords';
 import { getChordNameParts } from '../Theory/chords';
 import FormattedNoteName from './FormattedNoteName';
 
-const ChordModifier = styled.span`
+export const Modifier = styled.span`
   padding-left: ${({ theme }) => theme.global.borderSize.small};
 `;
 
@@ -16,7 +16,7 @@ const FormattedChord = ({ chord }: Props) => {
   return (
     <span>
       <FormattedNoteName note={rootNoteName} />
-      {chordModifier && <ChordModifier>{chordModifier}</ChordModifier>}
+      {chordModifier && <Modifier>{chordModifier}</Modifier>}
     </span>
   );
 };

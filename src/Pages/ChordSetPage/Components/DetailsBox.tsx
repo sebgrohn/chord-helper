@@ -1,4 +1,5 @@
 import { Box, Heading, Keyboard, Text, TextInput } from 'grommet';
+import FormattedKey from '../../../Components/FormattedKey';
 import type { KeyName } from '../../../Theory/keys';
 
 export interface Props {
@@ -37,7 +38,9 @@ const DetailsBox = ({
             )}{' '}
           </Heading>
           {selectedKey && !isEditing && (
-            <Text size="large">in {selectedKey}</Text>
+            <Text size="large">
+              in <FormattedKey keyName={selectedKey} />
+            </Text>
           )}
         </Box>
         <Text>

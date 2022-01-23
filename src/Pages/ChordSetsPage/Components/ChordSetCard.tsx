@@ -11,6 +11,7 @@ import {
 } from 'grommet';
 import { Checkmark, Close, Trash } from 'grommet-icons';
 import { useCallback, useRef, useState } from 'react';
+import FormattedKey from '../../../Components/FormattedKey';
 import Link from '../../../Components/Link';
 import useSortable from '../../../Hooks/useSortable';
 import type { ChordName } from '../../../Theory/chords';
@@ -71,7 +72,11 @@ const ChordSetCard = ({
             <Heading level={3} size="small" margin="none" color="brand">
               {name || <em>Unnamed chord set</em>}
             </Heading>
-            {selectedKey && <Text size="large">in {selectedKey}</Text>}
+            {selectedKey && (
+              <Text size="large">
+                in <FormattedKey keyName={selectedKey} />
+              </Text>
+            )}
           </Link>
           <Box direction="row" gap="small" justify="end" align="center">
             <Collapsible open={isRemoving} direction="horizontal">

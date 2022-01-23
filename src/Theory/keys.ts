@@ -16,7 +16,7 @@ const keyDefinitions: Record<KeyModifier, KeyDefinition> = {
 
 const keyNamePattern = /^\s*([A-G]#?)(|min)\s*$/;
 
-const getKeyNameParts = (keyName: KeyName): [NoteName, KeyModifier] => {
+export const getKeyNameParts = (keyName: KeyName): [NoteName, KeyModifier] => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, rootNoteName, keyModifier] = keyNamePattern.exec(keyName) ?? [];
   return [rootNoteName as NoteName, keyModifier as KeyModifier];
