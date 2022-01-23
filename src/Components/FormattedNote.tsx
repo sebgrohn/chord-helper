@@ -1,23 +1,16 @@
-import type { Note, NoteName } from '../Theory/notes';
-
-const notePattern = /^\s*([A-G])(#)?(\d)?\s*$/;
-
-const getNoteParts = (note: Note | NoteName) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, noteName, hash, octave] = notePattern.exec(note) ?? [];
-  return [noteName, hash, octave];
-};
+import type { Note } from '../Theory/notes';
+import { getNoteParts } from '../Theory/notes';
+import FormattedNoteName from './FormattedNoteName';
 
 export interface Props {
-  note: Note | NoteName;
+  note: Note;
 }
 
 const FormattedNote = ({ note }: Props) => {
-  const [noteName, hash, octave] = getNoteParts(note);
+  const [noteName, octave] = note ? getNoteParts(note) : [];
   return (
     <span>
-      {noteName}
-      <sup>{hash && '♯'}</sup>
+      <FormattedNoteName note={noteName} />
       {octave && <sub>{octave}</sub>}
     </span>
   );

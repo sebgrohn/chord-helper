@@ -39,7 +39,9 @@ export const chordDefinitions: Record<ChordModifier, ChordDefinition> = {
 const chordNamePattern =
   /^\s*([A-G]#?)(|maj6|dom7|maj7|aug|aug7|min|min6|min7)\s*$/;
 
-const getChordNameParts = (chordName: ChordName): [NoteName, ChordModifier] => {
+export const getChordNameParts = (
+  chordName: ChordName,
+): [NoteName, ChordModifier] => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, rootNoteName, chordModifier] =
     chordNamePattern.exec(chordName) ?? [];
