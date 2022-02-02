@@ -36,7 +36,7 @@ export type FretId =
   | 18
   | 19;
 
-type StringPosition = [StringId | StringInterval, FretId];
+type StringPosition = [FretId, StringId | StringInterval];
 
 /**
  * String and fret position (or null for unused), per finger (index -> pinky).
@@ -64,41 +64,41 @@ const chords: Record<InstrumentName, ChordDefinition[]> = {
     {
       chord: 'C',
       type: 'simple',
-      positions: [[5, 1], [3, 2], [2, 3], null],
+      positions: [[1, 5], [2, 3], [3, 2], null],
       mutedStrings: [1],
     },
     // { chord: 'Cmin', type: '', positions: [], mutedStrings: [] },
     {
       chord: 'D',
       type: 'simple',
-      positions: [[4, 2], [6, 2], [5, 3], null],
+      positions: [[2, 4], [2, 6], [3, 5], null],
       mutedStrings: [1, 2],
     },
     {
       chord: 'Dmin',
       type: 'simple',
-      positions: [[6, 1], [4, 2], [5, 3], null],
+      positions: [[1, 6], [2, 4], [3, 5], null],
       mutedStrings: [1, 2],
     },
     {
       chord: 'E',
       type: 'simple',
-      positions: [[4, 1], [2, 2], [3, 2], null],
+      positions: [[1, 4], [2, 2], [2, 3], null],
       mutedStrings: [],
     },
     {
       chord: 'Emin',
       type: 'simple',
-      positions: [null, [2, 2], [3, 2], null],
+      positions: [null, [2, 2], [2, 3], null],
       mutedStrings: [],
     },
     {
       chord: 'F',
       type: 'barre',
       positions: [
-        [[1, 6], 1],
-        [4, 2],
-        [2, 3],
+        [1, [1, 6]],
+        [2, 4],
+        [3, 2],
         [3, 3],
       ],
       mutedStrings: [],
@@ -107,30 +107,30 @@ const chords: Record<InstrumentName, ChordDefinition[]> = {
     {
       chord: 'G',
       type: 'simple',
-      positions: [[2, 2], [1, 3], [6, 3], null],
+      positions: [[2, 2], [3, 1], [3, 6], null],
       mutedStrings: [],
     },
     // { chord: 'Gmin', type: '', positions: [], mutedStrings: [] },
     {
       chord: 'A',
       type: 'simple',
-      positions: [[3, 2], [4, 2], [5, 2], null],
+      positions: [[2, 3], [2, 4], [2, 5], null],
       mutedStrings: [1],
     },
     {
       chord: 'Amin',
       type: 'simple',
-      positions: [[5, 1], [3, 2], [4, 2], null],
+      positions: [[1, 5], [2, 3], [2, 4], null],
       mutedStrings: [1],
     },
     {
       chord: 'B',
       type: 'barre',
       positions: [
-        [[2, 6], 2],
-        [3, 4],
+        [2, [2, 6]],
+        [4, 3],
         [4, 4],
-        [5, 4],
+        [4, 5],
       ],
       mutedStrings: [1],
     },
@@ -149,15 +149,15 @@ export const getStringPositionsParts = (stringPositions: StringPositions) =>
       (x): x is { pos: StringPosition; fingerIndex: number } => x.pos != null,
     )
     .map(({ pos, fingerIndex }) => {
-      const [stringIdOrInterval, fretId] = pos;
+      const [fretId, stringIdOrInterval] = pos;
       const [startStringId, endStringId] = Array.isArray(stringIdOrInterval)
         ? stringIdOrInterval
         : [stringIdOrInterval, stringIdOrInterval];
 
       return {
+        fretId,
         startStringId,
         endStringId,
-        fretId,
         fingerIndex,
       };
     });
