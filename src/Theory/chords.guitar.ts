@@ -1,4 +1,6 @@
 import type { ChordName } from './chords';
+import { transposeChord } from './chords';
+import type { IntervalPerfectUnison, IntervalWithPerfectOctave } from './notes';
 import type { InstrumentName } from './tunings.guitar';
 
 export type ChordType = 'simple' | 'barre';
@@ -59,7 +61,63 @@ export interface ChordDefinition {
   mutedStrings: StringId[];
 }
 
-const chords: Record<InstrumentName, ChordDefinition[]> = {
+const getEBarreShapeDefinition = (
+  interval: Exclude<IntervalWithPerfectOctave, IntervalPerfectUnison>,
+): ChordDefinition => ({
+  chord: transposeChord('E', interval),
+  type: 'barre',
+  positions: [
+    [interval, [1, 6]],
+    [(interval + 1) as FretId, 4],
+    [(interval + 2) as FretId, 2],
+    [(interval + 2) as FretId, 3],
+  ],
+  mutedStrings: [],
+});
+
+const getEMinBarreShapeDefinition = (
+  interval: Exclude<IntervalWithPerfectOctave, IntervalPerfectUnison>,
+): ChordDefinition => ({
+  chord: transposeChord('Emin', interval),
+  type: 'barre',
+  positions: [
+    [interval, [1, 6]],
+    null,
+    [(interval + 2) as FretId, 2],
+    [(interval + 2) as FretId, 3],
+  ],
+  mutedStrings: [],
+});
+
+const getABarreShapeDefinition = (
+  interval: Exclude<IntervalWithPerfectOctave, IntervalPerfectUnison>,
+): ChordDefinition => ({
+  chord: transposeChord('A', interval),
+  type: 'barre',
+  positions: [
+    [interval, [2, 6]],
+    [(interval + 2) as FretId, 3],
+    [(interval + 2) as FretId, 4],
+    [(interval + 2) as FretId, 5],
+  ],
+  mutedStrings: [1],
+});
+
+const getAMinBarreShapeDefinition = (
+  interval: Exclude<IntervalWithPerfectOctave, IntervalPerfectUnison>,
+): ChordDefinition => ({
+  chord: transposeChord('Amin', interval),
+  type: 'barre',
+  positions: [
+    [interval, [2, 6]],
+    [(interval + 1) as FretId, 5],
+    [(interval + 2) as FretId, 3],
+    [(interval + 2) as FretId, 4],
+  ],
+  mutedStrings: [1],
+});
+
+export const chords: Record<InstrumentName, ChordDefinition[]> = {
   guitar: [
     {
       chord: 'C',
@@ -80,6 +138,18 @@ const chords: Record<InstrumentName, ChordDefinition[]> = {
       positions: [[1, 6], [2, 4], [3, 5], null],
       mutedStrings: [1, 2],
     },
+    // { chord: 'D#', type: '', positions: [], mutedStrings: [] },
+    {
+      chord: 'D#min',
+      type: 'simple',
+      positions: [
+        [1, 3],
+        [2, 6],
+        [3, 4],
+        [4, 5],
+      ],
+      mutedStrings: [1, 2],
+    },
     {
       chord: 'E',
       type: 'simple',
@@ -92,25 +162,19 @@ const chords: Record<InstrumentName, ChordDefinition[]> = {
       positions: [null, [2, 2], [2, 3], null],
       mutedStrings: [],
     },
-    {
-      chord: 'F',
-      type: 'barre',
-      positions: [
-        [1, [1, 6]],
-        [2, 4],
-        [3, 2],
-        [3, 3],
-      ],
-      mutedStrings: [],
-    },
-    // { chord: 'Fmin', type: '', positions: [], mutedStrings: [] },
+    getEBarreShapeDefinition(1), // F
+    getEMinBarreShapeDefinition(1), // Fmin
+    getEBarreShapeDefinition(2), // F#
+    getEMinBarreShapeDefinition(2), // F#min
     {
       chord: 'G',
       type: 'simple',
       positions: [[2, 2], [3, 1], [3, 6], null],
       mutedStrings: [],
     },
-    // { chord: 'Gmin', type: '', positions: [], mutedStrings: [] },
+    getEMinBarreShapeDefinition(3), // Gmin
+    getEBarreShapeDefinition(4), // G#
+    getEMinBarreShapeDefinition(4), // G#min
     {
       chord: 'A',
       type: 'simple',
@@ -123,18 +187,10 @@ const chords: Record<InstrumentName, ChordDefinition[]> = {
       positions: [[1, 5], [2, 3], [2, 4], null],
       mutedStrings: [1],
     },
-    {
-      chord: 'B',
-      type: 'barre',
-      positions: [
-        [2, [2, 6]],
-        [4, 3],
-        [4, 4],
-        [4, 5],
-      ],
-      mutedStrings: [1],
-    },
-    // { chord: 'Bmin', type: '', positions: [], mutedStrings: [] },
+    getABarreShapeDefinition(1), // A#
+    getAMinBarreShapeDefinition(1), // A#min
+    getABarreShapeDefinition(2), // B
+    getAMinBarreShapeDefinition(2), // Bmin
   ],
   guitalele: [],
 };
