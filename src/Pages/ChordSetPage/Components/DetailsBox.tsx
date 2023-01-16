@@ -1,5 +1,6 @@
-import { Box, Heading, Keyboard, Text, TextInput } from 'grommet';
+import { Box, Keyboard, Text, TextInput } from 'grommet';
 import FormattedKey from '../../../Components/FormattedKey';
+import PageHeading from '../../../Components/PageHeading';
 import type { KeyName } from '../../../Theory/keys';
 
 export interface Props {
@@ -25,7 +26,7 @@ const DetailsBox = ({
     <Keyboard onEnter={() => onIsEditingChange(false)}>
       <Box width="100%">
         <Box direction="row" align="baseline" gap="small">
-          <Heading level={2} size="small" margin={{ vertical: 'small' }}>
+          <PageHeading>
             {isEditing ? (
               <TextInput
                 plain="full"
@@ -36,7 +37,7 @@ const DetailsBox = ({
             ) : (
               name || <em>Unnamed chord set</em>
             )}{' '}
-          </Heading>
+          </PageHeading>
           {selectedKey && !isEditing && (
             <Text size="large">
               in <FormattedKey keyName={selectedKey} />

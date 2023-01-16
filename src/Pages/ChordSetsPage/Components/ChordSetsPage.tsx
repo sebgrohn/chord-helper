@@ -1,5 +1,7 @@
-import { Box, Button, Heading, Text } from 'grommet';
+import { Box, Button, Text } from 'grommet';
 import { Add } from 'grommet-icons';
+import PageHeader from '../../../Components/PageHeader';
+import PageHeading from '../../../Components/PageHeading';
 import type { ChordSet as ChordSetType } from '../../../Store/Types/State';
 import ChordSetCardCollection from './ChordSetCardCollection';
 
@@ -20,11 +22,9 @@ const ChordSetsPage = ({
   onRemoveChordSet,
 }: Props) => (
   <Box gap="medium">
-    <Box direction="row" align="start" gap="small">
+    <PageHeader>
       <Box width="100%">
-        <Heading level={2} size="small" margin={{ vertical: 'small' }}>
-          My chord sets
-        </Heading>
+        <PageHeading>My chord sets</PageHeading>
         <Text>My favourite song compositions.</Text>
       </Box>
       <Button
@@ -32,7 +32,7 @@ const ChordSetsPage = ({
         a11yTitle="Add new chord set"
         onClick={onAddChordSet}
       />
-    </Box>
+    </PageHeader>
     <ChordSetCardCollection
       chordSets={chordSets}
       onAddChordSet={onAddChordSet}

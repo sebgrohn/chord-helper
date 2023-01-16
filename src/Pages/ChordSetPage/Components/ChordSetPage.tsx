@@ -1,5 +1,6 @@
 import { Box, Keyboard } from 'grommet';
 import { useRef, useState } from 'react';
+import PageHeader from '../../../Components/PageHeader';
 import type { ChordName } from '../../../Theory/chords';
 import type { KeyName } from '../../../Theory/keys';
 import ChordCardCollection from './ChordCardCollection';
@@ -46,7 +47,7 @@ const ChordSetPage = ({
   return (
     <Keyboard onEsc={() => setIsEditing(false)}>
       <Box gap="medium">
-        <Box direction="row" align="start" gap="small">
+        <PageHeader>
           <DetailsBox
             name={name}
             description={description}
@@ -81,7 +82,7 @@ const ChordSetPage = ({
               onIsEditingChange={setIsEditing}
             />
           </Box>
-        </Box>
+        </PageHeader>
         <ChordCardCollection
           chords={selectedChords}
           isEditing={isEditing}
