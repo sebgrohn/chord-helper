@@ -33,7 +33,7 @@ const ChordCard = ({
     <Card
       ref={ref}
       background="background-back"
-      width="500px"
+      width="fit-content"
       style={{
         cursor: isEditing ? 'grab' : 'default',
         opacity: isDragging ? 0.3 : 1,

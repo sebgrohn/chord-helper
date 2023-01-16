@@ -1,5 +1,6 @@
-import { Box, Grid, Text } from 'grommet';
+import { Box, Grid, ResponsiveContext, Text } from 'grommet';
 import { Close } from 'grommet-icons';
+import { useContext } from 'react';
 import styled, { css } from 'styled-components';
 import FormattedNote from '../../../Components/FormattedNote';
 import type { ChordName } from '../../../Theory/chords';
@@ -9,17 +10,17 @@ import { getNoteParts, NoteName, transposeNote } from '../../../Theory/notes';
 import type { InstrumentName } from '../../../Theory/tunings.guitar';
 import tunings from '../../../Theory/tunings.guitar';
 
-const PushedFingerBox = styled(Box)`
-  width: 36px;
-  height: calc(100% - 12px);
+const PushedFingerBox = styled(Box)<{ noteCircleSize: string }>`
+  width: ${({ noteCircleSize }) => noteCircleSize};
+  height: calc(100% - ${({ noteCircleSize }) => noteCircleSize} / 3);
+  border-radius: calc(${({ noteCircleSize }) => noteCircleSize} / 2);
   justify-self: center;
-  border-radius: 18px;
 `;
 
-const NoteCircleText = styled(Text)`
-  width: 36px;
-  height: 36px;
-  border-radius: 18px;
+const NoteCircleText = styled(Text)<{ noteCircleSize: string }>`
+  width: ${({ noteCircleSize }) => noteCircleSize};
+  height: ${({ noteCircleSize }) => noteCircleSize};
+  border-radius: calc(${({ noteCircleSize }) => noteCircleSize} / 2);
   text-align: center;
 `;
 
@@ -118,7 +119,7 @@ const StringChord = ({
 
   const maxFretId = (stringPositionsParts.reduce(
     (acc, { fretId }) => Math.max(acc, fretId),
-    4,
+    5,
   ) + 1) as FretId;
 
   const tuning = tunings[instrument] ?? [null, null, null, null, null, null];
@@ -176,11 +177,14 @@ const StringChord = ({
     });
   });
 
+  const isSmallSize = useContext(ResponsiveContext) === 'small';
+  const noteCircleSize = isSmallSize ? '24px' : '36px';
+  const gridCellSize = isSmallSize ? '32px' : '48px';
+
   return (
     <Grid
-      columns={Array(maxFretId).fill('1fr')}
-      rows={Array(maxStringIndex + 1).fill('xxsmall')}
-      gap={{ row: 'xxsmall' }}
+      columns={Array(maxFretId).fill(gridCellSize)}
+      rows={Array(maxStringIndex + 1).fill(gridCellSize)}
     >
       {strings.map(({ gridArea, isMuted }) => (
         <Box
@@ -213,6 +217,7 @@ const StringChord = ({
         <PushedFingerBox
           key={gridArea}
           gridArea={gridArea}
+          noteCircleSize={noteCircleSize}
           alignSelf="center"
           background={{ dark: 'border' }}
         />
@@ -246,10 +251,14 @@ const StringChord = ({
                   : undefined
               }
             >
-              <NoteCircleText textAlign="center">
+              <NoteCircleText
+                noteCircleSize={noteCircleSize}
+                size={isSmallSize ? 'xsmall' : 'medium'}
+                textAlign="center"
+              >
                 <FormattedNote note={note} />
               </NoteCircleText>
-              {isStringMuted && <Close size="small" />}
+              {isStringMuted && <Close size={isSmallSize ? '8px' : '12px'} />}
             </NoteBox>
           ),
         ),

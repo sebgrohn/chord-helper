@@ -1,5 +1,5 @@
-import { Grid } from 'grommet';
-import { useState } from 'react';
+import { Grid, ResponsiveContext } from 'grommet';
+import { useContext, useState } from 'react';
 import type { ChordName } from '../../../Theory/chords';
 import type { NoteName } from '../../../Theory/notes';
 import ChordCard from './ChordCard';
@@ -22,8 +22,14 @@ const ChordCardCollection = ({
 }: Props) => {
   const [highlightedNote, setHighlightedNote] = useState<NoteName>();
 
+  const isSmallSize = useContext(ResponsiveContext) === 'small';
+
   return (
-    <Grid columns="medium" gap="small" justify="center">
+    <Grid
+      columns={isSmallSize ? '206px' : '314px'}
+      gap="small"
+      justify="center"
+    >
       {chords.length !== 0 ? (
         chords.map((c, i) => (
           <ChordCard
