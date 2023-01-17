@@ -51,7 +51,7 @@ const ChordCard = ({
         />
       </CardHeader>
       <CardBody
-        pad="small"
+        pad={{ bottom: 'small', horizontal: 'xsmall' }}
         border={{ side: 'top', color: 'background-contrast' }}
       >
         <StringChord

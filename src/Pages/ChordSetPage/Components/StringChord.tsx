@@ -10,9 +10,15 @@ import { getNoteParts, NoteName, transposeNote } from '../../../Theory/notes';
 import type { InstrumentName } from '../../../Theory/tunings.guitar';
 import tunings from '../../../Theory/tunings.guitar';
 
-const PushedFingerBox = styled(Box)<{ noteCircleSize: string }>`
-  width: ${({ noteCircleSize }) => noteCircleSize};
-  height: calc(100% - ${({ noteCircleSize }) => noteCircleSize} / 3);
+const PushedFingerBox = styled(Box)<{
+  noteCircleSize: string;
+  gridCellWidth: string;
+}>`
+  width: calc(
+    100% - ${({ gridCellWidth }) => gridCellWidth} +
+      ${({ noteCircleSize }) => noteCircleSize}
+  );
+  height: ${({ noteCircleSize }) => noteCircleSize};
   border-radius: calc(${({ noteCircleSize }) => noteCircleSize} / 2);
   justify-self: center;
 `;
@@ -92,9 +98,9 @@ const getGridArea = (
   endFretId?: number,
   endStringIndex?: number,
 ) => {
-  const start = `${startFretId + 1}/${startStringIndex + 1}`;
-  const end = `${(endFretId ?? startFretId) + 2}/${
-    (endStringIndex ?? startStringIndex) + 2
+  const start = `${startFretId * 2 + 1}/${startStringIndex * 2 + 1}`;
+  const end = `${(endFretId ?? startFretId) * 2 + 3}/${
+    (endStringIndex ?? startStringIndex) * 2 + 3
   }`;
   return `${start} / ${end}`;
 };
@@ -136,12 +142,12 @@ const StringChord = ({
   const maxStringIndex = tuning.length - 1;
 
   const strings = tuning.map((_, stringIndex) => ({
-    gridArea: getGridArea(1, stringIndex, maxFretId, stringIndex),
+    gridArea: getGridArea(1, stringIndex + 0.5, maxFretId, stringIndex + 0.5),
     isMuted: mutedStrings.includes((stringIndex + 1) as StringId),
   }));
 
   const frets = new Array(maxFretId).fill(undefined).map((_, fretId) => ({
-    gridArea: getGridArea(fretId, 0, fretId, maxStringIndex),
+    gridArea: getGridArea(fretId, 0.5, fretId, maxStringIndex - 0.5),
     isStart: fretId === 0,
   }));
 
@@ -179,21 +185,22 @@ const StringChord = ({
 
   const isSmallSize = useContext(ResponsiveContext) === 'small';
   const noteCircleSize = isSmallSize ? '24px' : '36px';
-  const gridCellSize = isSmallSize ? '32px' : '48px';
+  const gridCellWidth = isSmallSize ? '28px' : '42px';
 
   return (
     <Grid
-      columns={Array(maxStringIndex + 1).fill(gridCellSize)}
-      rows={Array(maxFretId).fill(gridCellSize)}
+      columns={Array((maxStringIndex + 1) * 2).fill(
+        isSmallSize ? '14px' : '21px',
+      )}
+      rows={Array(maxFretId * 2).fill(isSmallSize ? '16px' : '24px')}
     >
-      {strings.map(({ gridArea, isMuted }, i) => (
+      {strings.map(({ gridArea }) => (
         <Box
           key={gridArea}
           gridArea={gridArea}
-          background={!isMuted ? 'background-contrast' : undefined}
           border={[
             {
-              side: i === 0 ? 'vertical' : 'right',
+              side: 'left',
               color: 'text-xweak',
               size: 'xsmall',
             },
@@ -218,6 +225,7 @@ const StringChord = ({
           key={gridArea}
           gridArea={gridArea}
           noteCircleSize={noteCircleSize}
+          gridCellWidth={gridCellWidth}
           alignSelf="center"
           background={{ dark: 'border' }}
         />
