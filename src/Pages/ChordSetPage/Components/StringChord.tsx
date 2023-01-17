@@ -81,13 +81,23 @@ const NoteBox = styled(Box)<{
 /**
  * All parameters are zero-based, inclusive.
  *
- * @param x1 Start column (zero-based, inclusive)
- * @param y1 Start row (zero-based, inclusive)
- * @param x2 Optional end column (zero-based, inclusive), defaults to `x1`
- * @param y2 Optional end row (zero-based, inclusive), defaults to `y1`
+ * @param startFretId Start fret (zero-based, inclusive)
+ * @param startStringIndex Start string (zero-based, inclusive)
+ * @param endFretId Optional end fret (zero-based, inclusive), defaults to start fret
+ * @param endStringIndex Optional end string (zero-based, inclusive), defaults to start string
  */
-const getGridArea = (x1: number, y1: number, x2?: number, y2?: number) =>
-  `${y1 + 1}/${x1 + 1} / ${(y2 ?? y1) + 1 + 1}/${(x2 ?? x1) + 1 + 1}`;
+const getGridArea = (
+  startFretId: number,
+  startStringIndex: number,
+  endFretId?: number,
+  endStringIndex?: number,
+) => {
+  const start = `${startFretId + 1}/${startStringIndex + 1}`;
+  const end = `${(endFretId ?? startFretId) + 2}/${
+    (endStringIndex ?? startStringIndex) + 2
+  }`;
+  return `${start} / ${end}`;
+};
 
 export interface Props {
   instrument?: InstrumentName;
@@ -118,20 +128,15 @@ const StringChord = ({
   const mutedStrings = chordDefinition?.mutedStrings ?? [];
 
   const maxFretId = (stringPositionsParts.reduce(
-    (acc, { fretId }) => Math.max(acc, fretId),
-    5,
+    (acc, { fretId }) => Math.max(acc, fretId + 1),
+    4,
   ) + 1) as FretId;
 
   const tuning = tunings[instrument] ?? [null, null, null, null, null, null];
   const maxStringIndex = tuning.length - 1;
 
   const strings = tuning.map((_, stringIndex) => ({
-    gridArea: getGridArea(
-      1,
-      maxStringIndex - stringIndex,
-      maxFretId,
-      maxStringIndex - stringIndex,
-    ),
+    gridArea: getGridArea(1, stringIndex, maxFretId, stringIndex),
     isMuted: mutedStrings.includes((stringIndex + 1) as StringId),
   }));
 
@@ -142,12 +147,7 @@ const StringChord = ({
 
   const positions = stringPositionsParts.map(
     ({ startStringId, endStringId, fretId, fingerIndex }) => ({
-      gridArea: getGridArea(
-        fretId,
-        maxStringIndex - (endStringId - 1),
-        fretId,
-        maxStringIndex - (startStringId - 1),
-      ),
+      gridArea: getGridArea(fretId, startStringId - 1, fretId, endStringId - 1),
       finger: fingerIndex + 1,
     }),
   );
@@ -165,7 +165,7 @@ const StringChord = ({
       const [noteName] = getNoteParts(note);
 
       return {
-        gridArea: getGridArea(i, maxStringIndex - stringIndex),
+        gridArea: getGridArea(i, stringIndex),
         isStringMuted,
         isVisible: isActive || i === 0,
         isActive: isActive,
@@ -183,19 +183,19 @@ const StringChord = ({
 
   return (
     <Grid
-      columns={Array(maxFretId).fill(gridCellSize)}
-      rows={Array(maxStringIndex + 1).fill(gridCellSize)}
+      columns={Array(maxStringIndex + 1).fill(gridCellSize)}
+      rows={Array(maxFretId).fill(gridCellSize)}
     >
-      {strings.map(({ gridArea, isMuted }) => (
+      {strings.map(({ gridArea, isMuted }, i) => (
         <Box
           key={gridArea}
           gridArea={gridArea}
           background={!isMuted ? 'background-contrast' : undefined}
           border={[
             {
-              side: 'bottom',
-              color: 'background-contrast',
-              size: 'small',
+              side: i === 0 ? 'vertical' : 'right',
+              color: 'text-xweak',
+              size: 'xsmall',
             },
           ]}
         />
@@ -206,9 +206,9 @@ const StringChord = ({
           key={gridArea}
           gridArea={gridArea}
           border={{
-            side: 'right',
+            side: 'bottom',
             color: 'text',
-            size: isStart ? 'small' : 'xsmall',
+            size: isStart ? 'medium' : 'xsmall',
           }}
         />
       ))}
