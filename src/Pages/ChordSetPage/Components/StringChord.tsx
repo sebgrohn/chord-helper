@@ -184,15 +184,15 @@ const StringChord = ({
   });
 
   const isSmallSize = useContext(ResponsiveContext) === 'small';
-  const noteCircleSize = isSmallSize ? '24px' : '36px';
-  const gridCellWidth = isSmallSize ? '28px' : '42px';
+  const noteCircleSize = isSmallSize ? '20px' : '30px';
+  const gridCellWidth = isSmallSize ? '24px' : '36px';
 
   return (
     <Grid
       columns={Array((maxStringIndex + 1) * 2).fill(
-        isSmallSize ? '14px' : '21px',
+        isSmallSize ? '12px' : '18px',
       )}
-      rows={Array(maxFretId * 2).fill(isSmallSize ? '16px' : '24px')}
+      rows={Array(maxFretId * 2).fill(isSmallSize ? '14px' : '21px')}
     >
       {strings.map(({ gridArea }) => (
         <Box

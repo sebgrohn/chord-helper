@@ -40,7 +40,7 @@ function App() {
             <Link to="/">Chord Helper</Link>
           </Heading>
         </Header>
-        <PageContent as="main" pad="large">
+        <PageContent as="main" pad="large" width={{ min: '360px' }}>
           <Routes>
             <Route
               path="/"

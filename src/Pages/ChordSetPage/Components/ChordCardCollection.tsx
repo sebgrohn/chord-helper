@@ -26,8 +26,8 @@ const ChordCardCollection = ({
 
   return (
     <Grid
-      columns={isSmallSize ? '176px' : '266px'}
-      gap="small"
+      columns={isSmallSize ? '152px' : '230px'}
+      gap={isSmallSize ? 'xsmall' : 'small'}
       justify="center"
     >
       {chords.length !== 0 ? (

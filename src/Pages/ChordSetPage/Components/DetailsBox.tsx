@@ -24,7 +24,7 @@ const DetailsBox = ({
 }: Props) => {
   return (
     <Keyboard onEnter={() => onIsEditingChange(false)}>
-      <Box width="100%">
+      <Box>
         <Box direction="row" align="baseline" gap="small">
           <PageHeading>
             {isEditing ? (

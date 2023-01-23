@@ -57,13 +57,7 @@ const ChordSetPage = ({
             onSetDescription={onSetDescription}
             onIsEditingChange={setIsEditing}
           />
-          <Box
-            direction="row"
-            justify="end"
-            align="center"
-            gap="small"
-            width="100%"
-          >
+          <Box direction="row" justify="end" align="center" gap="small">
             <KeySelector
               selectedKey={selectedKey}
               keys={availableKeys}
